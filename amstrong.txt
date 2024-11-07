@@ -1,0 +1,18 @@
+amstrong
+
+pseudo function:
+      findsumofcubeofdigits(number)
+        int sum=0
+        while(number!=0)
+          int num-num%10
+          sum= sum+ num*num*num
+          num=num/10
+          return sum
+
+pseudo code
+
+input number
+sum=  findsumofcubeofdigits(number)
+if(number== sum)
+print number is amstrong
+      
