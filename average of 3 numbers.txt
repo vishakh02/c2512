@@ -1,0 +1,11 @@
+// average of 3 numbers
+
+pseudo function
+ calculateavg(num1,num2,num3)
+    sum= num1+num2+num3
+    return sum
+    
+pseudo code
+    input num1,num2,num3
+    avg=calculateavg(num1,num2,num3)
+    print avg
