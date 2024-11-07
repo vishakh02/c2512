@@ -1,0 +1,21 @@
+// fibonacci
+
+pseudo function
+
+fibonacci(number)
+  int fn=0
+  int sn=1
+  print fn,sn
+  
+  for(int i=1;i<=(number-2);i++)
+  int temp=fn+sn
+  fn=sn
+  sn=temp
+  print sn
+  end for loop
+  
+  pseudo code
+  
+  input number
+  fibonacci(number)
+  
