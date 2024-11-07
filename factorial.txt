@@ -1,0 +1,17 @@
+//factorial 
+
+pseudo function
+  
+   factorial(number)
+     int fact=1
+     for(int i=1;i<=number;i++)
+        fact=fact*i
+    return fact
+    
+pseudo code
+
+   input number
+   fact= factorial(number)
+   print factorial=
+   print fact
+  
