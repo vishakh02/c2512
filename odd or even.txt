@@ -1,0 +1,23 @@
+odd or even
+
+pseudo function
+
+oddoreven(number)
+if(number%2==0)
+  even(number)
+ end if
+else
+  odd(number)
+end else
+
+odd(number)
+ print number is odd
+ 
+even(number)
+print number is even
+
+pseudo code
+ 
+ input number
+ oddoreven(number)
+
