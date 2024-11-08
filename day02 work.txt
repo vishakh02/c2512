@@ -1,0 +1,270 @@
+//Day 02 Work
+
+// average of 2 numbers
+
+pseudo code
+
+pseudo function
+calculateAverage(number1,number2)-> average
+ float average= (number1+number2)/2
+ return average
+end function
+
+input number1
+input number2
+average= calculateAverage(number1,number2)
+print average
+
+// cube of a number
+
+pseudo code
+
+pseudo function
+function calculateCube(number-> int) -> int
+ return number*number*number
+
+function calculateCubeTest()
+ input  number
+ cube= calculateCube(number)
+ print cube
+ 
+ pseudo code
+ calculateCubeTest()
+ 
+ #include <iostream>
+using namespace std;
+
+int calculateCube(int number){
+    return number*number*number;
+}
+
+void calculateCubeTest(){
+    int number,cube;
+    cout<<"Enter a number ";
+    cin>>number;
+    cube= calculateCube(number);
+    cout<<"Cube of number="<<cube<<endl;
+}
+
+int main(){
+    calculateCubeTest();
+    return 0;
+}
+
+//to print N natural numbers. 
+
+pseudo code
+
+pseudo function
+
+function printNaturalNumber(int n)
+ if(n>0)
+  for i= 1..n
+    print i
+  end for
+ end if
+ 
+ else
+  print "Entered number is less than zero"
+
+function printNaturalNumbersTest()
+ input n
+ printNaturalNumber(n)
+ 
+ pseudo code
+ printNaturalNumbersTest()
+ 
+ #include <iostream>
+using namespace std;
+
+void printNaturalNumber(int n){
+    if(n>0){
+        for(int i=1;i<=n;i++){
+            cout<<i<<"\n";
+        }
+}
+}
+
+void  printNaturalNumberTest(){
+    int n;
+    cout<<"Enter a number ";
+    cin>>n;
+    printNaturalNumber(n);
+}
+
+
+int main()
+{
+    printNaturalNumberTest();
+    return 0;
+}
+
+//to check number is pallindrone
+
+//pseudo code
+
+pseudo function
+
+functon isPallindrome(number->int)
+  copy=number
+  int reverse=0
+  while(number!=0)
+     temp=number%10
+     reverse= reverse*10+temp
+     number=number/10
+  end while
+  if( copy== reverse)
+    return True
+  end if
+  return False
+  
+function isPallindromeTest()
+  input number
+  result= isPallindrome(number)
+  if(result == True)
+    print number is pallindrome
+  end if
+  print number is not pallindrome
+
+pseudo code
+
+isPallindromeTest()
+
+
+#include <iostream>
+using namespace std;
+
+bool isPallindrome(int number){
+    int copy= number;
+    int reverse=0;
+    while(number!=0){
+        int temp=number%10;
+        reverse=reverse*10 + temp;
+        number= number/10;
+    }
+    if(copy == reverse)
+      return true;
+    
+    return false;
+}
+
+void isPallindromeTest(){
+    int number;
+    cout<<"Enter a number ";
+    cin>>number;
+    bool result= isPallindrome(number);
+    if(result == true)
+      cout<<"The entered number"<<"\t"<<number<<"\t" <<"is pallindrome";
+    else
+    cout<<"The entered number"<<"\t"<< number <<"\t"<<"is not pallindrome";
+     
+}
+
+int main(){
+    isPallindromeTest();
+}
+
+//to check a year is leap year
+
+pseudo function
+
+function isLeapYear(year->int)
+ if (year%400 == 0 or (year%4==0 and year%100!=0))
+   return true
+return false
+
+function isLeapYearTest()
+  input year
+  result=isLeapYear(year)
+  if(result == true)
+   print "entered tear is leap year"
+  else
+   print "entered tear is leap year"
+
+pseudo code
+
+isLeapYearTest()
+
+#include <iostream>
+using namespace std;
+
+bool isLeapYear(int year){
+    if(year%400==0 || (year%4==0 && year%100 !=0))
+      return true;
+    else
+      return false;
+}
+
+void isLeapYearTest(){
+    int year;
+    cout<<"Enter a year ";
+    cin>>year;
+    int result=isLeapYear(year);
+    if(result == true)
+      cout<<"]year"<<"\t"<<year<<"\t" <<"is Leap year";
+    else
+    cout<<"year"<<"\t"<< year <<"\t"<<"is not Leap year";
+}
+
+
+int main(){
+  isLeapYearTest();
+}
+
+//to check a number perfect square or not. 
+
+pseudo function
+
+function isPerfectSquare(number -> int) -> bool
+    root = integer part of sqrt(number)
+    if (root * root == number)
+        return true
+    return false
+
+function isPerfectSquareTest()
+    input number
+    result = isPerfectSquare(number)
+    if (result == true)
+        print "Entered number is a perfect square"
+    else
+        print "Entered number is not a perfect square"
+        
+pseudo code
+
+isPerfectSquareTest()
+
+#include <iostream>
+#include <cmath> 
+using namespace std;
+
+
+bool isPerfectSquare(int number) {
+    int root = (sqrt(number)); 
+    return (root * root == number); 
+}
+
+
+void isPerfectSquareTest() {
+    int number;
+    cout << "Enter a number: ";
+    cin >> number;
+
+    bool result = isPerfectSquare(number);
+    if (result) {
+       cout << "Entered number is a perfect square." << std::endl;
+    } else {
+        cout << "Entered number is not a perfect square." << std::endl;
+    }
+}
+
+int main() {
+    isPerfectSquareTest(); 
+    return 0;
+}
+
+
+
+
+    
+  
+ 
