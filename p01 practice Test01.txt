@@ -1,0 +1,308 @@
+1. Write a program to read 10 numbers from the user, find their sum. [with array]
+
+//pseudo functions 
+
+function calculateSum( array[] ->int, size ->int)->int
+    int sum=0
+    for i in range 0...size
+        sum+=array[i]
+    end for
+    return sum
+
+function calculateSumTest()
+    input array, size
+    int sum= calculateSum(array,size)
+    print "sum of the 10 numbers"
+
+//pseudocode
+calculateSumTest()
+
+=============         cpp code          ======================
+
+#include <iostream>
+using std::cin;
+using std::cout;
+
+int calculateSum(int array[], int size) 
+{
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum += array[i];
+    }
+    return sum;
+}
+
+void calculateSumTest() 
+{
+    int size = 10; 
+    int array[size];
+    
+    cout << "Enter " << size << " numbers: ";
+    for (int i = 0; i < size; i++) {
+        cin >> array[i];
+    }
+    
+    int sum = calculateSum(array, size);
+    cout << "Sum of the 10 numbers: " << sum;
+}
+
+int main() {
+    calculateSumTest();
+    return 0;
+}
+
+=====================================================================================================
+
+2. Write a program to read 10 numbers from the user, find their sum [without using array]
+
+//pseudo functions
+function getNumberAndAddToSum(sum -> int) -> int
+    input number
+    sum += number
+    return sum
+
+function addTenNumbers() -> int
+    int sum = 0
+    for i in range 1 to 10
+        sum = getNumberAndAddToSum(sum)
+    end for
+    return sum
+
+function calculateSumTest()
+    int sum = addTenNumbers()
+    print "Sum of the 10 numbers:"
+
+//pseudo code
+
+calculateSumTest()
+
+
+===========================      cpp               ================================
+
+#include <iostream>
+using std::cin;
+using std::cout;
+
+int getNumberAndAddToSum(int sum) {
+    int number;
+    cout << "Enter number: ";
+    cin >> number;
+    sum += number;
+    return sum;
+}
+
+int addTenNumbers() {
+    int sum = 0;
+    for (int i = 1; i <= 10; i++) {
+        sum = getNumberAndAddToSum(sum);
+    }
+    return sum;
+}
+
+void calculateSumTest() {
+    int sum = addTenNumbers();
+    cout << "Sum of the 10 numbers: " << sum;
+}
+
+int main() {
+    calculateSumTest();
+    return 0;
+}
+
+3.Write a program to find the highest number from 10 numbers.
+(user should input numbers)
+The highest number should be returned from a function.
+
+
+//pseudo functions
+function findHighestNumber() -> int
+    int highest = -infinity  // Start with the lowest possible value or the first input as 0
+    for i in range 1 to 10
+        int number
+        print "Enter number:"
+        input number
+        if number > highest
+            highest = number
+        end if
+    end for
+    return highest
+
+function testFindHighestNumber()
+    int highest = findHighestNumber()
+    print "The highest number is:", highest
+
+//pseudo code
+testFindHighestNumber()
+
+#include <iostream>
+using std::cout;
+using std::cin;
+
+int findHighestNumber() 
+{
+    int highest = 0;
+    for (int i = 1; i <= 10; i++) 
+    {
+        int number;
+        cout << "Enter number " << i << ": ";
+        cin >> number;
+        if (number > highest) 
+        {
+            highest = number;
+        }
+    }
+    return highest;
+}
+
+void testFindHighestNumber() 
+{
+    int highest = findHighestNumber();
+    cout << "The highest number is: " << highest;
+}
+
+int main() 
+{
+    testFindHighestNumber();
+    return 0;
+}
+
+
+4. Program for reversing a string without using any built in functions.
+
+//pseudo functions
+function swapCharacters(inputString -> string, length -> int) -> string
+    for i in range 0 to (length / 2)
+        temp = inputString[i]
+        inputString[i] = inputString[length - i - 1]
+        inputString[length - i - 1] = temp
+    end for
+    return inputString
+
+function reverseString(inputString -> string) -> string
+    int length = length of inputString
+    inputString = swapCharacters(inputString, length)
+    return inputString
+
+function testReverseString()
+    string inputString
+    print "Enter a string to reverse:"
+    input inputString
+    string reversedString = reverseString(inputString)
+    print "Reversed string:", reversedString
+
+//pseydo code
+testReverseString()
+
+========================               cpp                    ======================
+
+#include <iostream>
+#include <string>
+using std::cout;
+using std::cin;
+using std::string;
+
+string swapCharacters(string inputString, int length) 
+{
+    for (int i = 0; i < length / 2; i++) 
+    {
+        // Swap characters from both ends of the string
+        char temp = inputString[i];
+        inputString[i] = inputString[length - i - 1];
+        inputString[length - i - 1] = temp;
+    }
+    return inputString;
+}
+
+string reverseString(string inputString)
+{
+    int length = inputString.length();
+    inputString = swapCharacters(inputString, length);
+    return inputString;
+}
+
+void testReverseString() 
+{
+    string inputString;
+    cout << "Enter a string to reverse: ";
+    cin >> inputString;
+    string reversedString = reverseString(inputString);
+    cout << "Reversed string: " << reversedString;
+}
+
+int main() 
+{
+    testReverseString();
+    return 0;
+}
+
+
+
+4. Write a program that continuously prompts the user to enter a number. The program should add the entered number to the previous valid number if it is divisible by 3 or 5 and display the sum. If the number is not divisible by 3 or 5, display a message indicating this. The program should terminate when the user types any particular character. Additionally, handle invalid input by prompting the user to enter a valid number.
+
+
+
+#include <iostream>
+using  std::cin;
+using  std::cout;
+using  std::endl;
+
+
+bool isDivisibleBy3Or5(int num) 
+{
+    return (num % 3 == 0 || num % 5 == 0);
+}
+
+// Function to handle the main logic of the program
+void processNumbers()
+{
+    int previousValidNumber = 0;
+    int currentNumber;
+    char continueChoice;
+
+    do 
+    {
+        cout << "Enter a number: ";
+        cin >> currentNumber;
+
+        // Check if the number is divisible by 3 or 5
+        if (isDivisibleBy3Or5(currentNumber)) 
+        {
+            int sum = previousValidNumber + currentNumber;
+            cout << "Previous valid number: " << previousValidNumber << endl;
+            cout << "Entered number: " << currentNumber << endl;
+            cout << "Sum: " << sum << endl;
+
+            // Update previous valid number
+            previousValidNumber = currentNumber;
+        } 
+        else 
+        {
+            cout << currentNumber << " is not divisible by 3 or 5. No sum calculated." << endl;
+        }
+
+        // Ask the user if they want to continue
+        cout << "Do you want to continue? (y/n): ";
+        cin >> continueChoice;
+
+    } while (continueChoice == 'y' || continueChoice == 'Y');
+
+    cout << "Exiting program." << endl;
+}
+
+int main() {
+    // Start processing numbers
+    processNumbers();
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
