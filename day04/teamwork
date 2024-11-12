@@ -161,7 +161,7 @@ pseudo main:
 test()
 ==============================================================   cpp code    =======================================================================================
 
-          #include <iostream>
+#include <iostream>
 #include <cmath>
 #include <climits>
 #include <cstdlib>
@@ -171,22 +171,27 @@ using std::endl;
 
 const int MAX_SALARIES = 100;
 
-void readSalaries(int salaries[], int& size) {
+void readSalaries(int salaries[], int& size) 
+{
     int salary;
     size = 0; 
 
-    cout << "Enter salaries (-1 to stop):" << endl;
+    cout << "Enter salaries (-1 to stop): " << endl;
 
-    while (true) {
+    while (true) 
+    {
         cin >> salary;
-        if (salary == -1) {
+        if (salary == -1) 
+        {
             break;
         }
-        if (size < MAX_SALARIES) { 
+        if (size < MAX_SALARIES) 
+        { 
             salaries[size] = (salary); 
             size++;
-            
-        } else {
+        } 
+        else 
+        {
             cout << "Maximum number of salaries reached." <<endl;
             break;
         }
@@ -194,26 +199,30 @@ void readSalaries(int salaries[], int& size) {
 }
 
 
-
 int findSum(int salaries[], int size) 
 {
     int sum = 0;
+    
     for (int i = 0; i < size; i++) 
     {
         sum += salaries[i];
     }
+    
     return sum;
 }
+
 
 float findAverage( int salaries[], int size)
 {
     if (size == 0)
-    return 0; 
+    {
+        return 0; 
+    }
+    
     float average = ((findSum(salaries, size)) / (float)size);
+    
     return average;
 }
-
-
 
 
 bool isPrime(int number) 
@@ -226,11 +235,11 @@ bool isPrime(int number)
         }
          
     }
-      return true;
+    
+    return true;
 }
   
 
-  
 int findPrimeSalariesCount(int salaries[], int size)
 {
     int primeCount = 0;
@@ -242,33 +251,36 @@ int findPrimeSalariesCount(int salaries[], int size)
             primeCount++;
         }
       }
+      
     return primeCount;
 }
 
 
-
 bool isNumberMinimum4Digit(int number)
 {
-    
+    if(number > 999)
+    {
+        return true;
+    }
   
-  while (number > 999){
-       return true;
-  }
   return false;
 }
 
 
-  
-int findMin4DigitSalariesCount( int salaries[],int size){
-     int count = 0;
-      for(int i=0;i<size;i++){
-        if (isNumberMinimum4Digit(salaries[i])){
+int findMin4DigitSalariesCount( int salaries[],int size)
+{
+    int count = 0;
+    
+    for(int i=0;i<size;i++)
+    {
+        if (isNumberMinimum4Digit(salaries[i]))
+        {
             count++;
         }
-      }
- return count;
+    }
+    
+    return count;
 }
-
 
 
 int findMaxSalary(int salaries[], int size) 
@@ -286,6 +298,7 @@ int findMaxSalary(int salaries[], int size)
     return maxSalary; 
 }
 
+
 bool isOdd(int number)
 {
     if (((number % 2) != 0))
@@ -302,6 +315,7 @@ bool isOdd(int number)
 int findSumOfOddSalaries(int salaries[], int size)
 {
     int sum = 0;
+    
     for (int i = 0 ; i < size ; i++)
     {
         if (isOdd(salaries[i]))
@@ -318,6 +332,7 @@ int find2ndMinOddSalary(int salaries[], int size)
 {
     int minsalary = INT_MAX;
     int second_min_salary = INT_MAX;
+    
     for (int i = 0 ; i < size ; i++)
     {
         if (isOdd(salaries[i]))
@@ -326,13 +341,16 @@ int find2ndMinOddSalary(int salaries[], int size)
             {
                 second_min_salary = minsalary;
                 minsalary = salaries[i];
-                
+            }
+            else if (salaries[i] > minsalary && salaries[i] < second_min_salary)
+            {
+                second_min_salary = salaries[i];
             }
         }
     }
+    
     return second_min_salary;
 }
-
 
 
 void test(void)
@@ -372,14 +390,14 @@ void test(void)
     }
     else
     {
-        
         cout << "Max Salary is not prime" <<endl;
     }
 }
+
 
 int main(void)
 {
     test();
     
- return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
