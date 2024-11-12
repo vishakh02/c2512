@@ -1,9 +1,7 @@
 function readSalaries(salaries -> [int], size -> int& )->int
     salary=0
     size = 0
-
     print "Enter salaries (-1 to stop):"
-
     while (true)
         cin >> salary;
         if (salary == -1) 
