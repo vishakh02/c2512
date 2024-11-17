@@ -285,5 +285,67 @@ UPDATE customers SET aadhaar_id = '5553 8420' WHERE CustomerID = 5;
 | 5          | Vishakh      | 555-7890      | vishakh@example.com     | 2024-11-10     | 5553 8420  
 
 
+// queries
 
+1. Write an SQL query to retrieve complete booking details for all customers. The result should include the customer's information such as ID, name, contact number, email, and 
+registration date, along with the bus details, departure and arrival time , departure and arrival locations, payment method, payment amount, and payment date (if any).
+
+SELECT 
+    c.CustomerID,
+    c.Customer_Name,
+    c.ContactNumber,
+    c.Email,
+    c.RegisteredDate,
+    b.BusNumber,
+    bo.SeatNumber,
+    TO_CHAR(bs.DepartureTime, 'YYYY-MM-DD HH24:MI:SS') AS DepartureTime,  -- Explicit format
+    TO_CHAR(bs.ArrivalTime, 'YYYY-MM-DD HH24:MI:SS') AS ArrivalTime,        -- Explicit format
+    bs.DepartureLocation,
+    bs.ArrivalLocation,
+    p.PaymentMethod,
+    p.Amount AS PaymentAmount,
+    p.PaymentDate AS PaymentDate,
+    bo.BookingStatus
+FROM 
+    Customers c
+INNER JOIN 
+    Bookings bo ON c.CustomerID = bo.CustomerID
+INNER JOIN 
+    Bus_Schedules bs ON bo.ScheduleID = bs.ScheduleID
+INNER JOIN 
+    Bus_details b ON bs.BusID = b.BusID
+LEFT JOIN 
+    Payments p ON bo.BookingId = p.BookingID
+ORDER BY 
+    c.CustomerID, bo.BookingId;
+
+2. Retrieve the details of all customers who have made at least one booking.
+
+SELECT * 
+FROM Customers 
+WHERE CustomerID IN (SELECT CustomerID FROM Bookings);
+
+3.  Retrieve the details of the bus that is associated with the schedule having ScheduleID 501.
+
+SELECT * 
+FROM Bus_details 
+WHERE BusID = (SELECT BusID FROM Bus_Schedules WHERE ScheduleID = 501);
+
+4. Write a query to retrieve the total number of distinct bookings and the average payment amount for each bus.
+   The result should be ordered by the average payment amount in descending order.
+
+SELECT 
+    bs.BusID,
+    COUNT( bok.BookingId) AS TotalBookings,
+    AVG(p.Amount) AS AveragePayment
+FROM 
+    Bookings bok
+JOIN 
+    Payments p ON bok.BookingId = p.BookingID
+JOIN 
+    Bus_Schedules bs ON bok.ScheduleID = bs.ScheduleID
+GROUP BY 
+    bs.BusID
+ORDER BY 
+    AveragePayment desc ;
 
