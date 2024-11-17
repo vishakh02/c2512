@@ -1980,22 +1980,20 @@
 
 29.
 
-    Part 1:
-
-    Read patients' ages (integer) from keyboard till we read less than zero by using array / collection."   
-    Find average age (integer),                                                                             
-    prime ages sum(example: 11, prime number age), 
-    teenager ages sum, 
-    minimum age, 
-    odd ages sum (example: 51), and
-    2nd maximum adult age.  
-    Check minimum age is also prime age.
-    Use coding standards and best practices to write pseudo code and c++ code.
-    Plan the task codes to make as reusable functions.
+"Read doctors' salaries (integer) from keyboard till we read -1 
+    by using array / collection."
+Find average salary (integer), 
+prime salaries count(example: Rs.101, prime number salary), 
+minimum 4 digit salaries count, 
+maximum salary, 
+odd salaries sum (example: Rs.5001), and
+2nd minimum odd salary.  
+Check maximum salary is also prime salary.
+Use coding standards and best practices to write pseudo code and c++ code.
+Plan the task codes to make as reusable functions.
 
 
 //pseudocode
-
 
 pseudofunction:
 
@@ -2396,6 +2394,124 @@ int main(void)
     test();
     
     return EXIT_SUCCESS;
+}
+
+
+30.
+
+   // without using array
+
+//pseudocode
+
+pseudo function:
+
+function readNumberFromUser(number -> int) -> int
+
+function findAverageAndMaxSalary(number -> int) -> int
+    sum = 0 -> int
+    average = 0 -> float
+    max_salary = INT_MIN -> int
+    print "Enter the salaries"
+    for i = 0...number - 1
+        input salary
+        sum = sum + salary
+        if (salary > max_salary)
+            max_salary = salary
+    end for
+    average = sum / number
+    print "Enter your choice (1. Average, 2. Max_salary): "
+    input choice;
+    switch (choice)
+        case 1:
+            print "Average is: " 
+            break;
+        case 2:
+            print "Maximum salary is: " 
+            break;
+        case 3:
+            print "Average is: " 
+            print "Maximum salary is: " 
+            break;
+        default:
+            print "invalid"
+    end switch
+
+function findAverageAndMaxSalaryTest()
+    input number
+    findAverageAndMaxSalary()
+
+pseudo main():
+
+findAverageAndMaxSalaryTest()
+
+// C++ code
+
+#include<iostream>
+#include<climits>
+#include<cstblib>
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+
+void findAverageAndMaxSalary(int number)
+{
+    int salary, choice, sum = 0;
+    int max_salary = INT_MIN;
+    float average = 0;
+    
+    cout << "Enter the salaries: ";
+    
+    for (int i = 0 ; i < number ; i++)
+    {
+        cin >> salary;
+        
+        sum = sum + salary;
+        
+        if (salary > max_salary)
+        {
+            max_salary = salary;
+        }
+    }
+    
+    average = sum / number;
+    
+    cout << "Enter your choice (1. Average, 2. Max_salary): ";
+    cin >> choice;
+    
+    switch (choice)
+    {
+        case 1:
+            cout << "Average is: " << average;
+            break;
+        case 2:
+            cout << "Maximum salary is: " << max_salary;
+            break;
+        case 3:
+            cout << "Average is: " << average << endl;
+            cout << "Maximum salary is: " << max_salary;
+            break;
+        default:
+            cout << "invalid";
+    }
+}
+
+void findAverageAndMaxSalaryTest(void)
+{
+    int number;
+    float average_salary;
+    
+    cout << "Enter the number of salaries: ";
+    cin >> number;
+    
+    findAverageAndMaxSalary(number);
+}
+
+int main(void)
+{
+    findAverageAndMaxSalaryTest();
+    return EXIT_SUCCESS;
 }
 
 
