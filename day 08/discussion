@@ -1,0 +1,225 @@
+UPDATE employees SET salary = 10000, bonus = 1000 WHERE id = 6;
+from DEPARTMENTS
+where id = 10;
+
+--Display deparments names for ids 20 or 30 
+select NAME
+from departments
+where (id in (20,30));
+
+--Display number of departments 
+select count(*) as number_of_departments
+from departments;
+
+--Display all departments sorted by name A-Z order
+select id, name
+from DEPARTMENTS
+order by name asc;
+
+--Display  deparments names for ids 20 or 30 sort by Z-A order 
+select name
+from DEPARTMENTS
+WHERE (id in (20,30))
+order by name desc;
+
+-- Display deparment by name = 'Alpha'
+select id, name
+from DEPARTMENTS
+where name = 'Alpha';
+
+-- -- countries
+
+-- Display all countries 
+select id, name, ruler
+from COUNTRIES;
+
+-- Display countries by id (=11)
+select id,name,ruler
+from COUNTRIES 
+where id = 11;
+
+-- Display countries names for ids 21 or 41
+select name 
+from COUNTRIES 
+where (id in (21,41));
+
+-- Display number of countries
+select count(*) as number_of_countries
+from COUNTRIES;
+
+-- Display all countries sorted by name A-Z order
+select id, name, ruler 
+from COUNTRIES
+order by NAME asc;
+
+-- Display all countries sorted by name Z-A order 
+select id, name, ruler 
+from COUNTRIES
+order by name desc;
+
+-- Display countries names for ids 21 or 41 sort by Z-A order 
+select name 
+from countries 
+WHERE (id in(21,41))
+order by name asc;
+
+-- -- cities 
+
+-- Display all cities 
+select id, name, admin, country_id
+from CITIES;
+
+-- Display cities by id (=101) 
+select id, name, admin, country_id
+from CITIES
+WHERE id = 101;
+
+-- Display cities names for ids 102 or 103
+select id, name, admin, country_id
+from CITIES
+WHERE (id in (102, 103));
+
+-- Display number of cities
+select count(*) as number_of_cities
+from CITIES;
+
+-- Display all cities sorted by name A-Z order
+select id, name, admin, country_id
+from CITIES
+order by name asc;
+
+-- Display all cities sorted by name Z-A order 
+select id, name, admin, country_id
+from CITIES
+order by name asc;
+
+--Display cities names for ids 102 or 103 sort by Z-A order
+select name 
+from CITIES
+where (id in (102, 103))
+order by name desc;
+
+-- select cities data by country_id = 11 
+select id, name, admin, country_id
+from cities 
+where (COUNTRY_ID = 11);
+
+ -- select country id for given country name 
+ select id
+ from COUNTRIES
+ where name = 'India';
+
+ -- select cities data by country name = 'India' 
+ select id, name, admin, country_id
+ from cities
+ where (country_id = (select id
+                    from COUNTRIES
+                    where name = 'India'));
+
+ -- select cities data by country ruler = 'Trump' 
+ select id, name, admin, country_id
+ from CITIES
+ where(country_id = (select id
+                    from COUNTRIES
+                    where (ruler in ('Trump'))));
+ 
+ -- select cities data by country ruler = 'Trump' or 'Modi'
+ select id, name, admin, country_id
+ from CITIES
+ where(country_id in (select id
+                    from COUNTRIES
+                    where (ruler in ('Trump','Modi'))));
+
+-- -- employees 
+    
+    -- display employees from department name = 'Beta'
+select ID 
+from departments
+where (name = 'Beta');
+
+select id, name, job_title, department_id, address, city_id 
+        from employees 
+        where (department_id = 20);
+
+select id, name, job_title, department_id, address, city_id 
+        from employees
+        where (department_id = (select ID 
+                              from departments
+                              where (name = 'Beta')));      
+
+    -- display employees from country name = 'India'
+
+    select ID
+    from COUNTRIES
+    where name = 'India';
+
+    select ID
+    from CITIES
+    where (COUNTRY_ID = 11);
+
+    select id, name, job_title, department_id, address, city_id
+    from EMPLOYEES
+    where (CITY_ID in (102,103));
+
+    select id
+    from CITIES
+    where (country_id = (select ID
+                        from COUNTRIES
+                        where name = 'India'));
+
+select id, name, job_title, department_id, address, city_id
+        from employees 
+        where (city_id in (select id
+                           from CITIES
+                           where (country_id = (select ID
+                                               from COUNTRIES
+                                               where name = 'India'))));
+
+    -- aggregators : count, sum, avg, min, max 
+    
+    -- department id based number_of_employees
+
+select DEPARTMENT_ID, COUNT(*) as number_of_employees
+from EMPLOYEES
+group by DEPARTMENT_ID;
+
+-- job_title based number_of_employees
+select job_title, count(*) as number_of_employees
+from EMPLOYEES
+group by JOB_TITLE;
+
+ -- city_id based number_of_employees
+ select CITY_ID, COUNT(*) as number_of_employees
+ from EMPLOYEES
+ group by CITY_ID;
+
+-- find number_of_employees, total salary, 
+    -- min salary, max salary, average salary
+select COUNT(*) as no_of_employees,
+       sum(salary) as total_salary,
+       max(salary) as max_salary,
+       min(salary) as min_salary,
+       avg(salary) as avg_salary
+from employees;
+
+-- find total salary each deparment id wise 
+SELECT DEPARTMENT_ID, sum(salary) as total_salary
+from EMPLOYEES
+group by DEPARTMENT_ID;
+
+
+ select department_id,
+       COUNT(*) as number_of_employees,
+       sum(salary) as total_salary,
+       min(salary) as min_salary,
+       max(salary) as max_salary,
+       avg(salary) as average_salary
+ from employees
+ group by DEPARTMENT_ID;
+
+
+-- find emp name, country name 
+select employees.name as emp_name, countries.name as country_name
+from employees
+inner join cities on (employees.city_id = cities.id)
+inner join countries on (cities.country_id = countries.id);                    
