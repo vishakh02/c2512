@@ -1,0 +1,67 @@
+LEAP YEAR
+
+pseudofunction :
+
+isLeapYear( year -> int)
+if(year % 4 ==0)
+return true
+end if 
+if(year % 400 ==0 && year % 100 != 0)
+return true
+end if
+return false
+
+isLeapYearTest()
+input year
+if(isLeapYear(year)
+print "Leap Year"
+end if
+else
+print "Not a Leap Year"
+end else
+
+pseudocode :
+isLeapYearTest()
+
+code :
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+bool isLeapYear(int year)
+
+{
+    if(year % 4 == 0)
+    {
+        return true;
+    }
+    if(year % 400 ==0 && year % 100 != 0 )
+    {
+        return true;
+    }
+    return false;
+}
+
+
+void isLeapYearTest()
+{
+    int year;
+    cout<<"Enter the Year : ";
+    cin>>year;
+    
+    if(isLeapYear(year))
+    {
+        cout<<"Leap Year"<<year<<endl;
+    }
+    else
+    {
+        cout<<"Not Leap Year"<<year<<endl;
+    }
+}
+
+int main()
+{
+    isLeapYearTest();
+    return 0;
+}
