@@ -1,0 +1,212 @@
+PRIME NUMBER :
+
+Pseudofunction :
+
+function isPrime(int number)->int
+if(number <= 0)
+return false
+end if
+if(number <= 3)
+return true
+end if
+if(number % 2== 0 || number % 3 == 0)
+return false
+end if
+
+for(int i=5;i<=sqrt(number);i+6)
+if(number % i == 0)
+return false
+end if
+end for 
+return true
+
+function isPrimeTest()
+input number
+bool result = isPrime()
+if result = prime
+print " Prime "
+else
+print "Not Prime"
+
+pseudocode :
+isPrimeTest()
+
+C++ CODE :
+
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+bool isPrime(int number)
+{
+    if(number<=0)
+    {
+        return false; 
+    }
+    if(number<=3)
+    {
+        return true;
+    }
+    if(number % 2 == 0 || number % 3 == 0)
+    {
+       return false; 
+    }
+    for(int i=5;i<=sqrt(number);i+6)
+    {
+        if(number % i ==0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+void isPrimeTest()
+{
+    int number;
+    cout << "Enter a number :";
+    cin >> number;
+    bool result = isPrime(number);
+    
+    if(result)
+    {
+        cout<<"Prime";
+    }
+    else
+    {
+        cout<<"Not Prime";
+    }
+    
+}
+
+int main()
+{
+   isPrimeTest();
+   return 0;
+}
+----------------------------------------------------------------
+
+AVERAGE OF TWO NUMBERS : 
+
+Pseudofunction :
+
+function calculateAverage(number1,number2)
+average = (number1+number2)/2
+return average
+
+function calculateAvarageTest()
+input number1,number2
+calculate average(number1,number2)
+print "average"
+
+pseudocode :
+calculateAverageTest()
+
+Code :
+#include <iostream>
+using namespace std;
+
+double calculateAverage(double number1,double number2)
+{
+    return (number1+number2)/2;
+}
+
+void calculateAverageTest()
+{
+    int number1,number2;
+    cout << "Enter the number1: ";
+    cin >> number1;
+    cout << "Enter the number2: ";
+    cin >> number2;
+    
+    int average = calculateAverage(number1, number2);
+    cout << "The average is: " << average << endl;
+}
+
+
+int main()
+{
+    calculateAverageTest();
+
+    return 0;
+}
+-----------------------------------------------------------------
+
+CUBE 
+pseudofunction :
+
+function calculateCube(number)-> int
+return number*number*number
+
+function calculateCubeTest()
+input number
+cube = calculateCube(number)
+print "cube"
+
+pseudocode :
+calculateCubeTest()
+
+code :
+#include <iostream>
+using namespace std;
+
+int calculateCube(int number)
+{
+    return (number*number*number);
+}
+
+void calculateCubeTest()
+{
+    int number;
+    cout<<"Enter number :";
+    cin>>number;
+    int cube = calculateCube(number);
+    cout<<"cube of the number "<<cube<<endl;
+    
+}
+int main()
+{
+    calculateCubeTest();
+
+    return 0;
+}
+------------------------------------------------------------------------
+
+PRINT N NATURAL NUMBERS
+pseudocode :
+
+function printNaturalNumbers(number)
+for(int i=1;i<=number;i++)
+
+function printNaturalNumversTest()
+input number
+print "Numbers"
+
+pseudocode :
+
+printNaturalNumversTest()
+
+code :
+#include <iostream>
+using namespace std;
+
+void printNaturalNumbers(int number)
+{
+    for(int i=1;i<=number;i++)
+    cout<<i<<endl;
+}
+
+void printNaturalNumbersTest()
+{
+    int number;
+    cout<<"Enter number : ";
+    cin>>number;
+    printNaturalNumbers(number);
+}
+int main()
+{
+    printNaturalNumbersTest();
+
+    return 0;
+}
