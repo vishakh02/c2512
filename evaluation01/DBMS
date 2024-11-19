@@ -2,7 +2,7 @@ Given UNF  :
 
      CustomerID  , Customer_Name ,ContactNumber, Email ,RegisteredDate ,
      booking_id ,booking_number ,bus_id,bus_number,bus_type,
-     route_start_location,route_end_location, departure_time ,arrival_time ,departure_location, arrival_location
+     route_start_location,route_end_location, departure_time ,arrival_time,
     PaymentID, BookingID, Amount, PaymentMethod, PaymentDate.
 
     ticket1_seat_number ,ticket1_seat_price,
@@ -70,8 +70,6 @@ CREATE TABLE Bus_Schedules (
     RouteID INT NOT NULL,
     DepartureTime DATE,
     ArrivalTime DATE,
-    DepartureLocation VARCHAR(100),
-    ArrivalLocation VARCHAR(100),
     FOREIGN KEY (BusID) REFERENCES BUS_DETAILS(BusID),
     FOREIGN KEY (RouteID) REFERENCES BUS_ROUTES(RouteID)
 );
@@ -151,20 +149,20 @@ VALUES (48, 'Kasargod', 'Wayanad',75);
 
 --insert data into Bus_Schedules table
 
-INSERT INTO Bus_Schedules (BusID, RouteID, DepartureTime, ArrivalTime, DepartureLocation, ArrivalLocation) 
-VALUES (101, 40, TO_DATE('2024-11-20 08:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-20 12:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Trivandrum', 'Kozhikode');
+INSERT INTO Bus_Schedules (BusID, RouteID, DepartureTime, ArrivalTime) 
+VALUES (101, 40, TO_DATE('2024-11-20 08:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-20 12:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
-INSERT INTO Bus_Schedules (BusID, RouteID, DepartureTime, ArrivalTime, DepartureLocation, ArrivalLocation) 
-VALUES (102, 42, TO_DATE('2024-11-21 09:30:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-21 13:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'Ernakulam', 'Varkala');
+INSERT INTO Bus_Schedules (BusID, RouteID, DepartureTime, ArrivalTime) 
+VALUES (102, 42, TO_DATE('2024-11-21 09:30:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-21 13:30:00', 'YYYY-MM-DD HH24:MI:SS'));
 
-INSERT INTO Bus_Schedules (BusID, RouteID, DepartureTime, ArrivalTime, DepartureLocation, ArrivalLocation) 
-VALUES(103, 44, TO_DATE('2024-11-22 07:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-22 11:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Kasargod', 'Malapuram');
+INSERT INTO Bus_Schedules (BusID, RouteID, DepartureTime, ArrivalTime) 
+VALUES(103, 44, TO_DATE('2024-11-22 07:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-22 11:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
-INSERT INTO Bus_Schedules ( BusID, RouteID, DepartureTime, ArrivalTime, DepartureLocation, ArrivalLocation) 
-VALUES (104, 46, TO_DATE('2024-11-23 10:15:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-23 14:15:00', 'YYYY-MM-DD HH24:MI:SS'), 'Kannur', 'Kollam');
+INSERT INTO Bus_Schedules ( BusID, RouteID, DepartureTime, ArrivalTime) 
+VALUES (104, 46, TO_DATE('2024-11-23 10:15:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-23 14:15:00', 'YYYY-MM-DD HH24:MI:SS'));
 
-INSERT INTO Bus_Schedules (BusID, RouteID, DepartureTime, ArrivalTime, DepartureLocation, ArrivalLocation) 
-VALUES (105, 48, TO_DATE('2024-11-24 06:30:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-24 10:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'Alapuzha', 'Kottayam');
+INSERT INTO Bus_Schedules (BusID, RouteID, DepartureTime, ArrivalTime) 
+VALUES (105, 48, TO_DATE('2024-11-24 06:30:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-24 10:30:00', 'YYYY-MM-DD HH24:MI:SS'));
 
 --insert data into Bookings table
 
@@ -236,13 +234,13 @@ RouteID | StartLocation | EndLocation | Distance
 
 Bus_Schedule  Table 
 
-| ScheduleID | BusID | RouteID | DepartureTime          | ArrivalTime            | DepartureLocation | ArrivalLocation 
-|------------|-------|---------|------------------------|------------------------|-------------------|-----------------
-| 501        | 101   | 40      | 2024-11-20 08:00:00    | 2024-11-20 12:00:00    | Trivandrum        | Kozhikode       
-| 511        | 102   | 42      | 2024-11-21 09:30:00    | 2024-11-21 13:30:00    | Ernakulam         | Varkala         
-| 521        | 103   | 44      | 2024-11-22 07:00:00    | 2024-11-22 11:00:00    | Kasargod          | Malapuram       
-| 531        | 104   | 46      | 2024-11-23 10:15:00    | 2024-11-23 14:15:00    | Kannur            | Kollam          
-| 541        | 105   | 48      | 2024-11-24 06:30:00    | 2024-11-24 10:30:00    | Alapuzha          | Kottayam        
+| ScheduleID | BusID | RouteID | DepartureTime          | ArrivalTime            
+|------------|-------|---------|------------------------|------------------------
+| 501        | 101   | 40      | 2024-11-20 08:00:00    | 2024-11-20 12:00:00    
+| 511        | 102   | 42      | 2024-11-21 09:30:00    | 2024-11-21 13:30:00      
+| 521        | 103   | 44      | 2024-11-22 07:00:00    | 2024-11-22 11:00:00    
+| 531        | 104   | 46      | 2024-11-23 10:15:00    | 2024-11-23 14:15:00         
+| 541        | 105   | 48      | 2024-11-24 06:30:00    | 2024-11-24 10:30:00    
 
 Bookings  Table
 
@@ -300,8 +298,6 @@ SELECT
     bo.SeatNumber,
     TO_CHAR(bs.DepartureTime, 'YYYY-MM-DD HH24:MI:SS') AS DepartureTime,  -- Explicit format
     TO_CHAR(bs.ArrivalTime, 'YYYY-MM-DD HH24:MI:SS') AS ArrivalTime,        -- Explicit format
-    bs.DepartureLocation,
-    bs.ArrivalLocation,
     p.PaymentMethod,
     p.Amount AS PaymentAmount,
     p.PaymentDate AS PaymentDate,
