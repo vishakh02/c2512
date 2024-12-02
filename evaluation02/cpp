@@ -1,0 +1,322 @@
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+// *****Const.h*****
+// Constants
+const int MAX_BOOKINGS = 100;
+// *****Patient.h*****
+class PatientDetails {
+    friend class Patient;
+    private:
+        string PatientId;
+        int PatientAge;
+    public:
+        bool GreaterThan(const PatientDetails& other);
+        bool LessThan(const PatientDetails& other);
+         //getters-setters
+        string GetPatientId();
+        int GetPatientAge();
+};
+// *****Patient.h*****
+class Patient{
+    friend class PatientAggregator;
+    friend int main();
+    private:
+     // attributes
+    PatientDetails P_Details[MAX_BOOKINGS];    
+    int numOfPatient;
+
+    public:
+        // support
+        int findIndexById(string PatientId);
+        // behaviours
+        void create();
+        void displayAll();
+        void editById();
+        void deleteById();
+        //
+        Patient();
+};
+//*****PatientAggregator.h*****
+class PatientAggregator {
+    public:
+        int findMin(Patient& manager);
+        int findMax(Patient& manager);
+        int findSecondMin(Patient& manager);
+        int findSecondMax(Patient& manager);
+};
+// *****Menu.h*****
+void printMenu();
+
+// *****Main.cpp*****
+
+int main() {
+    Patient manager;
+    PatientAggregator aggregator;
+   
+    int choice; // User's menu choice
+
+    do {
+        printMenu(); // Display menu
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        // Menu-driven functionality
+        switch (choice) {
+            case 1: manager.create();    break;
+            case 2: manager.displayAll();  break;
+            case 3: manager.editById();      break;
+            case 4: manager.deleteById();    break;
+            case 5: 
+                std::cout << "Patient with Min Age: " 
+                    << manager.P_Details[aggregator.findMin(manager)].GetPatientId() 
+                    << " with age " 
+                    << manager.P_Details[aggregator.findMin(manager)].GetPatientAge() 
+                    << std::endl;
+                break;
+            case 6: 
+                std::cout << "Patient with Max Age: " 
+                    << manager.P_Details[aggregator.findMax(manager)].GetPatientId() 
+                    << " with age " 
+                    << manager.P_Details[aggregator.findMax(manager)].GetPatientAge() 
+                    << std::endl;
+                break;
+            case 7: 
+                std::cout << "Patient with 2nd Min Age: " 
+                    << manager.P_Details[aggregator.findSecondMin(manager)].GetPatientId() 
+                    << " with age " 
+                    << manager.P_Details[aggregator.findSecondMin(manager)].GetPatientAge() 
+                    << std::endl;
+                break;
+            case 8: 
+                std::cout << "Patient with 2nd Max Age: " 
+                    << manager.P_Details[aggregator.findSecondMax(manager)].GetPatientId() 
+                    << " with age " 
+                    << manager.P_Details[aggregator.findSecondMax(manager)].GetPatientAge() 
+                    << std::endl;
+                break;
+            case 9:
+                cout << "Exiting the system. Goodbye!\n";
+                break;
+            default:
+                cout << "Invalid choice. Please enter a number between 1 and 5.\n";
+        }
+    } while (choice != 9);
+
+    return 0;
+}
+
+// *****Patient.cpp*****
+/**
+ * @brief Creates a new hospital Age and stores details in arrays. 
+ */
+void Patient::create() {
+    if (numOfPatient >= MAX_BOOKINGS) {
+        cout << "Error: Maximum Patient Booking limit reached.\n";
+        return;
+    }
+
+    string id;
+    int age;
+
+    cout << "Enter Patient ID: ";
+    cin >> id;
+
+    // Ensure hospital Age id is unique
+    if (findIndexById(id) != -1) {
+        cout << "Error: Patient ID already exists. Please use a unique PatientID.\n";
+        return;
+    }
+
+    cout << "Enter Patient Age: ";
+    cin >> age;
+
+    // Store the hospital Age details
+    P_Details[numOfPatient].PatientId = id;
+    P_Details[numOfPatient].PatientAge = age;
+    numOfPatient++;
+
+    cout << "Patient created successfully.\n";
+}
+
+/**
+ * @brief Displays all existing P_Details in a tabular format.
+ */
+void Patient::displayAll() {
+    if (numOfPatient == 0) {
+        cout << "No Patient Details available to display.\n";
+        return;
+    }
+
+    cout << "--------------------\n";
+    cout << "| Patient ID | Age | \n";
+    cout << "--------------------\n";
+    for (int i = 0; i < numOfPatient; i++) {
+        cout << "| " << setw(10) << P_Details[i].PatientId << " | "
+             << setw(3) << P_Details[i].PatientAge << " |\n";
+    }
+    cout << "---------------------\n";
+}
+
+/**
+ * @brief Finds the index of a hospital Age by id.
+ * @param id Patient id to search for.
+ * @return Index of the hospital Age if found, -1 otherwise.
+ */
+int Patient::findIndexById(string id) {
+    for (int i = 0; i < numOfPatient; i++) {
+        if (P_Details[i].PatientId == id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+/**
+ * @brief Edits an existing hospital Age by id.
+ */
+void Patient::editById() {
+    string id;
+    cout << "Enter Patient id to edit: ";
+    cin >> id;
+
+    int index = findIndexById(id);
+    if (index == -1) {
+        cout << "Error: Patient id not found.\n";
+        return;
+    }
+
+    cout << "Current Details - Patient age : " << P_Details[index].PatientAge << "\n";
+
+    cout <<  "Update Patient's Age : ";
+    cin >> P_Details[index].PatientAge;
+
+    cout << "Patient Age updated successfully.\n";
+}
+
+/**
+ * @brief Deletes an existing hospital Age by id.
+ */
+void Patient::deleteById() {
+    string id;
+    cout << "Enter Patient id to delete: ";
+    cin >> id;
+
+    int index = findIndexById(id);
+    if (index == -1) {
+        cout << "Error: Patient id not found.\n";
+        return;
+    }
+
+    // Shift data to fill the gap
+    for (int i = index; i < numOfPatient - 1; i++) {
+        P_Details[i] = P_Details[i + 1];
+    }
+    numOfPatient--;
+
+    cout << "Patient deleted successfully.\n";
+}
+
+Patient::Patient() {
+    numOfPatient = 0;
+}
+// *****Menu.cpp*****
+void printMenu() {
+    cout << "\n=== Hospital Management System ===\n";
+    cout << "1. Create Patient\n";
+    cout << "2. Display All Patient Details\n";
+    cout << "3. Edit Patient Details\n";
+    cout << "4. Delete Patient Details\n";
+    cout << "5. Find Min Age\n";
+    cout << "6. Find Max Age\n";
+    cout << "7. Find Second Min Age\n";
+    cout << "8. Find Second Max Age\n";
+    cout << "9. Exit\n";
+}
+
+//*****Patient.cpp*****
+bool PatientDetails::GreaterThan(const PatientDetails& other)
+{
+    return (PatientAge > other.PatientAge);
+}
+
+bool PatientDetails::LessThan(const PatientDetails& other)
+{
+    return (PatientAge < other.PatientAge);
+}
+
+//getters-setters
+string PatientDetails::GetPatientId()
+{
+    return PatientId;
+}
+int PatientDetails::GetPatientAge()
+{
+    return PatientAge;
+}
+//*****PatientAggregator.cpp*****
+// Function to find the index of the Patient with the minimum years of Age
+int PatientAggregator::findMin(Patient& manager) {
+    PatientDetails* arr = manager.P_Details;
+    int& n = manager.numOfPatient;
+    //
+    int minIndex = 0;
+    for (int i = 1; i < n; ++i) {
+        if (arr[i].LessThan(arr[minIndex])) {
+            minIndex = i;
+        }
+    }
+    return minIndex;
+}
+
+// Function to find the index of the Patient with the maximum years of Age
+int PatientAggregator::findMax(Patient& manager) {
+    PatientDetails* arr = manager.P_Details;
+    int& n = manager.numOfPatient;
+    //
+    int maxIndex = 0;
+    for (int i = 1; i < n; ++i) {
+        if (arr[i].GreaterThan(arr[maxIndex])) {
+            maxIndex = i;
+        }
+    }
+    return maxIndex;
+}
+
+// Function to find the index of the Patient with the second minimum years of Age
+int PatientAggregator::findSecondMin(Patient& manager) {
+    PatientDetails* arr = manager.P_Details;
+    int& n = manager.numOfPatient;
+    //
+    int minIndex = findMin(manager);
+    int secondMinIndex = (minIndex == 0) ? 1 : 0;
+    
+    for (int i = 0; i < n; ++i) {
+        if (i != minIndex) {
+            if (arr[i].LessThan(arr[secondMinIndex])) {
+                secondMinIndex = i;
+            }
+        }
+    }
+    return secondMinIndex;
+}
+
+// Function to find the index of the Patient with the second maximum years of Age
+int PatientAggregator::findSecondMax(Patient& manager) {
+    PatientDetails* arr = manager.P_Details;
+    int& n = manager.numOfPatient;
+    //
+    int maxIndex = findMax(manager);
+    int secondMaxIndex = (maxIndex == 0) ? 1 : 0;
+    
+    for (int i = 0; i < n; ++i) {
+        if (i != maxIndex) {
+            if (arr[i].GreaterThan(arr[secondMaxIndex])) {
+                secondMaxIndex = i;
+            }
+        }
+    }
+    return secondMaxIndex;
+}
