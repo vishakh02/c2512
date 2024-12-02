@@ -211,7 +211,7 @@ Hi vishakh. Welcome to Linux Programming !!!
 
 Task 2
 
-eginner Level Problem Statement: 
+Beginner Level Problem Statement: 
 Managing C++ Files and Directories in Linux
 
 Objective:  
@@ -353,6 +353,50 @@ remove the directory if it’s empty.
 
     --ls
     --nothing will happen
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+Task 03 
+
+Linux Distributions for Beginners 
+
+1. `Ubuntu`:  
+   - Most popular beginner-friendly distribution.  
+   - User-friendly interface and large community support.  
+   - Ideal for desktops, laptops, and servers.
+
+2. `Linux Mint`:  
+   - Based on Ubuntu with a Windows-like interface.  
+   - Easy to use and great for transitioning from Windows.  
+
+3. `Fedora`:  
+   - Focuses on open-source and cutting-edge technologies.  
+   - Backed by Red Hat, suitable for learning Linux fundamentals.
+
+4. `Zorin OS`:  
+   - Designed for beginners, especially Windows users.  
+   - Offers a clean and simple desktop experience.  
+
+5. `Elementary OS`:  
+   - Known for its Mac-like design and minimalism.  
+   - Great for users seeking a visually polished interface.
+
+6. `Pop!_OS`:  
+   - Developed by System76, optimized for productivity and gaming.  
+   - Beginner-friendly with advanced customization options.
+
+7. `Debian`:  
+   - Stable and reliable, but slightly less beginner-focused.  
+   - Ideal for those who want to explore Linux fundamentals.  
+
+8. `openSUSE (Leap)`:  
+   - Easy to install and manage with YaST configuration tool.  
+   - Good for both beginners and advanced users.  
+
+These distributions are beginner-friendly, 
+with active communities and resources to help new users get started.
+
+Start with Ubuntu or Linux Mint for the easiest experience!
+
 
 
 
