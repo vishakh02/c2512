@@ -6,7 +6,7 @@ using namespace std;
 // *****Const.h*****
 // Constants
 const int MAX_BOOKINGS = 100;
-// *****Patient.h*****
+// *****PatientDetails.h*****
 class PatientDetails {
     friend class Patient;
     private:
