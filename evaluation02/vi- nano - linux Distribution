@@ -1,0 +1,408 @@
+Task 01:
+
+Here's a step-by-step guide to solving the 
+`Beginner Level Problem Statement` 
+Using the `vi` Editor for C++ Program Development
+
+---
+
+1. `Create a new C++ project directory`:
+     -- Create a directory called `vi_cpp_project` 
+     to store your C++ programs.
+   
+      -- mkdir vi_cpp_project
+    
+ 2. `Navigate to the project directory`:
+     -- Change into the `vi_cpp_project` directory. 
+   
+      -- cd vi_cpp_project
+     
+3. `Create a new C++ file using `vi` editor`:
+    -- Open `vi` and create a new file called `welcome.cpp`.
+   
+     --touch welcome.cpp
+   
+4. `Write a basic C++ program in `vi``:
+    -- In `vi`, write a simple C++ program 
+       that prints "Welcome to Linux programming!".
+
+vi welcome.cpp 
+
+#include <iostream>
+#include <cstdlib>
+
+using std::cout;
+
+int main(){
+	cout << "Welcome to Linux Programming !!! ";
+
+	return EXIT_SUCCESS;
+}
+
+5. Save and exit the `vi` editor`:
+   - After writing the code, save the file and exit `vi`.
+   
+   enter Command mode
+     -- :wq 
+       -- to save and exit from vi editor.
+     
+   cat welcome.cpp 
+   #include <iostream>
+   #include <cstdlib>
+
+   using std::cout;
+
+   int main(){
+	cout << "Welcome to Linux Programming !!! ";
+
+	return EXIT_SUCCESS;
+   }
+     
+     
+     -- g++ welcome.cpp 
+     -- ./a.out
+     
+     Welcome to Linux Programming !!!
+     
+6. `Edit the program`:
+   - Open `welcome.cpp` again in `vi`, and 
+   modify the program to ask for the user's name and 
+   greet them by name.
+   - Use `vi` commands to navigate and modify the file, 
+   such as inserting text, deleting lines, 
+   and saving changes.
+
+vi welcome.cpp 
+ 
+cat welcome.cpp 
+
+#include <iostream>
+#include <cstdlib>
+
+using std::cout;
+using std::cin;
+
+int main(){
+	char name[40];
+	cout << "Enter Name : ";
+	cin >> name;
+	
+	cout << "Hi " << name << ". Welcome to Linux Programming !!! ";
+
+	return EXIT_SUCCESS;
+}
+
+
+vishakh@vishakh-pc:~/cpp/vi_cpp_project$ g++ welcome.cpp 
+
+vishakh@vishakh-pc:~/cpp/vi_cpp_project$ ./a.out
+
+Enter Name : vishakh
+Hi vishakh. Welcome to Linux Programming !!! 
+
+7. `Compile the C++ program`:
+   -- Compile the program using the `g++` compiler 
+      into an executable called `welcome`.
+
+        --g++ -o welcome.out welcome.cpp 
+
+        -- ls
+           a.out  welcome.cpp  welcome.out
+
+8. `Run the compiled program`:
+   -- Run the executable to check if the program works 
+      as expected (asks for name and greets).
+      
+      -- ./welcome.out 
+
+            Enter Name : vishakh
+            Hi vishakh. Welcome to Linux Programming !!! 
+      
+    
+9. `View the contents of the C++ file`:
+    -- Use the `cat` command 
+       to display the contents of `welcome.cpp`.
+       
+       cat welcome.cpp 
+
+      #include <iostream>
+      #include <cstdlib>
+
+      using std::cout;
+      using std::cin;
+
+      int main(){
+	char name[40];
+	cout << "Enter Name : ";
+	cin >> name;
+	
+	cout << "Hi " << name << ". Welcome to Linux Programming !!! ";
+
+	return EXIT_SUCCESS;
+      }
+     
+     
+   
+10. `Use `vi` to make further edits`:
+    - Open `welcome.cpp` in `vi` and 
+      add an additional line to print "Goodbye!" 
+      at the end of the program.
+    
+    vi welcome.cpp 
+    
+    in command mode
+        -- use '}' to go down from one paragraph to another
+        -- use 'O' to create new line 
+        
+        cat welcome.cpp 
+        
+      #include <iostream>
+      #include <cstdlib>
+
+      using std::cout;
+      using std::cin;
+
+      int main(){
+	char name[40];
+	cout << "Enter Name : ";
+	cin >> name;
+	
+	cout << "Hi" << name << ". Welcome to Linux Programming !!! ";
+	cout << "Goodbye!";
+
+	return EXIT_SUCCESS;
+      }
+
+11. Compile and run the updated program`:
+     - After editing, recompile and run the program 
+       to ensure it displays the welcome message followed 
+       by the goodbye message.
+
+      -- g++ welcome.cpp 
+      -- ./a.out
+        Enter Name : vishakh
+        Hi vishakh. Welcome to Linux Programming !!! Goodbye!
+
+12. `Delete the C++ file`:
+    - Once finished, remove the `welcome.cpp` file.
+
+13. `Remove the project directory`:
+    - Check if the directory is empty and remove it.
+
+      --rm welcome.cpp
+      -- ls
+          a.out  welcome.out
+          
+      --rm *
+      -- ls
+
+
+13. `Remove the project directory`:
+    - Check if the directory is empty and remove it.
+
+       -- cd ..
+
+        vishakh@vishakh-pc:~/cpp$ rmdir vi_cpp_project/
+
+        -- ls
+
+           HelloWorld.cpp
+
+
+------------------------------------------------------------------------------------------
+
+Task 2
+
+Beginner Level Problem Statement: 
+Managing C++ Files and Directories in Linux
+
+Objective:  
+Gain hands-on experience 
+with basic Linux commands while working 
+with a C++ project by 
+    creating, 
+    editing, 
+    compiling, and 
+    running simple programs.
+
+---
+
+
+
+1. Create a new directory called my_cpp_project for your C++ programs.
+
+    --mkdir my_cpp_project
+    --this will create the directory my_cpp_project.
+
+
+2. Change into the my_cpp_project directory.
+
+   --cd my_cpp_project
+   --this will switch to the child directory that is my_cpp_project
+
+
+3. Create a C++ file named greet.cpp
+   in the my_cpp_project directory.
+   
+   --touch greet.cpp
+   --this will create the file greet.cpp
+   --ls
+   --this will list the files in that directory --only file  is greet.cpp
+
+
+4. Write a C++ program inside greet.cpp 
+   that asks the user for their name and prints a greeting message.
+   
+    --nano greet.cpp
+    --enter the nano editor
+    
+    #include <iostream>
+    #include <cstdlib>
+
+    using std::cout;
+    using std::cin;
+    using std::endl;
+
+    int main() {
+            char name[200];
+
+            cout << "Enter name: ";
+            cin >> name;
+            cout << "hello " << name << "!!" << endl;
+
+            return EXIT_SUCCESS;
+    }
+
+
+5. Compile the greet.cpp program into an executable.
+
+    --g++ greet.cpp
+    --this will compile the program and create an a.out file
+
+
+6. Run the compiled executable and ensure
+   that it prompts for the user’s name and displays the greeting.
+   
+    --./a.out
+    --this will run the file and the ouput will be:
+    --Enter name: Vishakh
+      hello Vishakh!!
+
+7. Use a Linux command to display the contents of greet.cpp.
+
+  --cat greet.cpp
+  
+    #include <iostream>
+    #include <cstdlib>
+
+    using std::cout;
+    using std::cin;
+    using std::endl;
+
+    int main() {
+            char name[200];
+
+            cout << "Enter name: ";
+            cin >> name;
+            cout << "hello " << name << "!!" << endl;
+
+            return EXIT_SUCCESS;
+    }
+
+8. Modify the greet.cpp file 
+to add a simple farewell message and save the changes.
+
+    --enter the nano editor again
+    --nano greet.cpp
+    --edit the program to this:
+    #include <iostream>
+    #include <cstdlib>
+
+    using std::cout;
+    using std::cin;
+    using std::endl;
+
+    int main() {
+            char name[200];
+
+            cout << "Enter name: ";
+            cin >> name;
+            cout << "Hello " << name << "!!" << endl;
+            cout << "Bye " << name << "!!" << endl;
+            return EXIT_SUCCESS;
+    }
+
+9. Compile and run the modified program 
+to ensure it works as expected.
+
+    --g++ greet.cpp
+    --a.out file will be created
+    --./a.out
+    --this will print the output:
+    --Enter name: Vishakh
+    Hello Vishakh!!
+    Bye Vishakh!!
+
+10. Remove the greet.cpp file once you're done.
+
+    --rm greet.cpp
+    --this will remove the file
+    --rm my_cpp_project
+    --this will remove the directory
+
+11. Check the contents of the my_cpp_project directory, and 
+remove the directory if it’s empty.
+
+    --ls
+    --nothing will happen
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+Task 03 
+
+Linux Distributions for Beginners 
+
+1. `Ubuntu`:  
+   - Most popular beginner-friendly distribution.  
+   - User-friendly interface and large community support.  
+   - Ideal for desktops, laptops, and servers.
+
+2. `Linux Mint`:  
+   - Based on Ubuntu with a Windows-like interface.  
+   - Easy to use and great for transitioning from Windows.  
+
+3. `Fedora`:  
+   - Focuses on open-source and cutting-edge technologies.  
+   - Backed by Red Hat, suitable for learning Linux fundamentals.
+
+4. `Zorin OS`:  
+   - Designed for beginners, especially Windows users.  
+   - Offers a clean and simple desktop experience.  
+
+5. `Elementary OS`:  
+   - Known for its Mac-like design and minimalism.  
+   - Great for users seeking a visually polished interface.
+
+6. `Pop!_OS`:  
+   - Developed by System76, optimized for productivity and gaming.  
+   - Beginner-friendly with advanced customization options.
+
+7. `Debian`:  
+   - Stable and reliable, but slightly less beginner-focused.  
+   - Ideal for those who want to explore Linux fundamentals.  
+
+8. `openSUSE (Leap)`:  
+   - Easy to install and manage with YaST configuration tool.  
+   - Good for both beginners and advanced users.  
+
+These distributions are beginner-friendly, 
+with active communities and resources to help new users get started.
+
+Start with Ubuntu or Linux Mint for the easiest experience!
+
+
+
+
+
+
+   
+   
