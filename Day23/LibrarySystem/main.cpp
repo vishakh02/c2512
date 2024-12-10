@@ -1,3 +1,18 @@
+single inheritance using static binding:
+=============================================================
+Create two static objects for Both Base and Derived class
+and call all behaviours
+and 
+one two dynamic objects for Base and Derived class 
+and call all behaviours
+
+Define constructors and destructors for all the classes 
+=============================================================
+Example 5: `Library System`
+- `Base Class:` Book `{field: title, behavior: read()}`
+- `Derived Class:` EBook `{field: fileSize, behavior: download()}`
+============================================================= 
+    
 #include <iostream>
 #include <string>
 
