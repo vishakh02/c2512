@@ -1,3 +1,27 @@
+Examples for diamond problem in inheritance:
+=============================================================
+These class structures represent the diamond problem,
+where the `final derived class` 
+inherits ambiguously 
+from two intermediate classes 
+that share a common base class.
+=============================================================
+Create one static object for final-derived class
+and call all behaviours
+and 
+one dynamic object for final-derived class 
+and call all behaviours
+
+Define constructors and destructors for all the classes
+
+Example 5: `Education System`
+- `Base Class:` Person `{field: name, behavior: introduce()}`
+- `Derived Class 1:` Teacher `{field: subject, behavior: teach()}`
+- `Derived Class 2:` Student `{field: grade, behavior: study()}`
+- `Final Derived Class:` TeachingAssistant `{field: hours, behavior: assist()}`
+=============================================================
+
+	
 #include <iostream>
 
 using namespace::std;
