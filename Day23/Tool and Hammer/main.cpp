@@ -1,3 +1,24 @@
+single inheritance with dynamic binding
+=============================================================
+one two dynamic/static objects of the Derived class 
+pointed by base class pointer
+and call all behaviours using Base class pointer 
+
+Override Base Class behaviors to derived class.
+Define constructors and destructors for all the classes 
+Define all the fields as dynamic fields in each class 
+
+If you use string, use c-string (don't use string class)
+        ie. dynamic c-string [dynamic char array]
+============================================================= 
+Example 5: `Tool and Hammer`
+- `Base Class:` `Tool`  
+  - Fields: `toolName`, `weight`  
+  - Pure Virtual Behaviors: `use()`, `repair()`  
+- `Derived Class:` `Hammer`  
+  - Fields: `handleMaterial`  
+============================================================= 
+
 #include <iostream>
 #include <cstring>
 
