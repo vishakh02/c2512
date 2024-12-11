@@ -28,14 +28,14 @@ using namespace std;
 class Tool {
 protected:
     char* toolName;
-    double weight;
+    double* weight;
 
 public:
     // Constructor
     Tool(const char* name, double wgt) {
         toolName = new char[strlen(name) + 1];
         strcpy(toolName, name);
-        weight = wgt;
+        this->weight = wgt;
         cout << "Tool constructor called.." << endl;
     }
 
@@ -57,7 +57,7 @@ protected:
 
 public:
     // Constructor
-    Hammer(const char* name, double wgt, const char* material)
+    Hammer(const char* name, double* wgt, const char* material)
         : Tool(name, wgt) {
         handleMaterial = new char[strlen(material) + 1];
         strcpy(handleMaterial, material);
