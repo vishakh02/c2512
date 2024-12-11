@@ -35,7 +35,10 @@ public:
     Tool(const char* name, double wgt) {
         toolName = new char[strlen(name) + 1];
         strcpy(toolName, name);
-        this->weight = wgt;
+
+        weight = new double;
+        *weight = wgt;
+
         cout << "Tool constructor called.." << endl;
     }
 
@@ -43,6 +46,7 @@ public:
     virtual ~Tool() {
         cout << "Tool destructor called.." << endl;
         delete[] toolName;
+        delete weight;
     }
 
     // Pure virtual behaviors
@@ -57,10 +61,11 @@ protected:
 
 public:
     // Constructor
-    Hammer(const char* name, double* wgt, const char* material)
+    Hammer(const char* name, double wgt, const char* material)
         : Tool(name, wgt) {
         handleMaterial = new char[strlen(material) + 1];
         strcpy(handleMaterial, material);
+
         cout << "Hammer constructor called.." << endl;
     }
 
@@ -72,14 +77,14 @@ public:
 
     // Override behaviors
     void use() override {
-        cout << "Using the hammer: " << toolName 
-             << " weighing " << weight << "kg, with a handle made of "
+        cout << "Using the hammer: " << toolName
+             << " weighing " << *weight << "kg, with a handle made of "
              << handleMaterial << "." << endl;
     }
 
     void repair() override {
-        cout << "Repairing with the hammer: " << toolName 
-             << " weighing " << weight << "kg, with a handle made of "
+        cout << "Repairing with the hammer: " << toolName
+             << " weighing " << *weight << "kg, with a handle made of "
              << handleMaterial << "." << endl;
     }
 };
