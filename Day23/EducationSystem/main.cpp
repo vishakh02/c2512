@@ -96,7 +96,7 @@ class TeachingAssistant : public Teacher, public Student{
 
 int main(){
     cout << "\n=== static Object ===" << endl;
-    static  TeachingAssistant ta("john", "Mathematics", "A+", 5);
+     TeachingAssistant ta("john", "Mathematics", "B+", 5);
     ta.introduce();
     ta.teach();
     ta.study();
@@ -104,7 +104,7 @@ int main(){
 
    // Dynamic object
     cout << "\n=== Dynamic Object ===" << endl;
-    TeachingAssistant* ta_dynamic = new TeachingAssistant("Alice", "Physics", "A", 10);
+    TeachingAssistant* ta_dynamic = new TeachingAssistant("Alice", "Physics", "B", 10);
     ta_dynamic->introduce();
     ta_dynamic->teach();
     ta_dynamic->study();
