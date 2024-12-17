@@ -1,159 +1,159 @@
 #include <iostream>
-#include <string>
-#include <memory>
 #include <cstring>
+#include <utility>
+#include <memory> 
+#include <vector> 
 
 using namespace std;
 
-class Employee
-{
-private:
-    unique_ptr<int> id;
-    unique_ptr<int> age;
-    unique_ptr<char[]> name;
 
-public:
-    Employee(int id, int age, const char *name);
-    Employee(Employee &&other) noexcept;
-    Employee &operator=(Employee &&other) noexcept;
-    virtual ~Employee() = default;
-    virtual void swp(Employee &other);
-    friend ostream &operator<<(ostream &out, const Employee &employee);
+class Employee 
+{
+    private:
+        unique_ptr<int> id;
+        unique_ptr<int> age;
+        unique_ptr<char[]> name;
+    
+    public:
+        // Constructor
+        Employee(int id, int age, const char* name) 
+        {
+            cout << "\n" << "Employee Argument constructor called" << endl;
+            this->id = make_unique<int>(id);
+            this->age = make_unique<int>(age);
+            this->name = make_unique<char[]>(strlen(name) + 1);
+            strcpy(this->name.get(), name);
+        }
+    
+        // Move Constructor
+        Employee(Employee&& other) noexcept
+            : id(std::move(other.id)), age(std::move(other.age)), name(std::move(other.name)) {
+                cout << "\n" << "Employee Move constructor called" << endl;
+            }
+    
+        // Move Assignment Operator
+        Employee& operator=(Employee&& other) noexcept 
+        {
+            if (this != &other) {
+                id = std::move(other.id);
+                age = std::move(other.age);
+                name = std::move(other.name);
+            }
+            return *this;
+        }
+    
+        virtual void swap(Employee& other) 
+        {
+            Employee temp(std::move(other));
+            other = std::move(*this);
+            *this = std::move(temp);
+        }
+    
+        friend ostream& operator<<(ostream& out, const Employee& employee);
 };
 
-Employee::Employee(int id, int age, const char *name)
+ostream& operator<<(ostream& out, const Employee& employee) 
 {
-    this->id = make_unique<int>(id);
-    this->age = make_unique<int>(age);
-    this->name = make_unique<char[]>(strlen(name) + 1);
-    strcpy(this->name.get(), name);
-}
-
-Employee::Employee(Employee &&other) noexcept
-    : id(move(other.id)), age(move(other.age)), name(move(other.name))
-{
-}
-
-Employee &Employee::operator=(Employee &&other) noexcept
-{
-    if (this != &other)
-    {
-        id = move(other.id);
-        age = move(other.age);
-        name = move(other.name);
-    }
-    return *this;
-}
-
-void Employee::swp(Employee &other)
-{
-    Employee temp(move(*this));
-    *this = move(other);
-    other = move(temp);
-}
-
-ostream &operator<<(ostream &out, const Employee &employee)
-{
-    out << "ID: " << *(employee.id) << ", Name: " << employee.name.get() << ", Age: " << *(employee.age);
+    out << *employee.id << " " << *employee.age << " " << employee.name.get();
     return out;
 }
 
-// Programmer class
-class Programmer : public Employee
+class Programmer : public Employee 
 {
-private:
-    unique_ptr<string[]> tasks;
-    unique_ptr<int> taskCount;
-
-public:
-    Programmer(int v_id, int v_age, const char *v_name, string *v_tasks, int v_taskCount);
-    Programmer(Programmer &&other) noexcept;
-    Programmer &operator=(Programmer &&other) noexcept;
-    ~Programmer() = default;
-    void swp(Employee &other) override;
-    friend ostream &operator<<(ostream &out, const Programmer &programmer);
+    private:
+        vector<string> tasks; 
+    
+    public:
+        // Constructor
+        Programmer(int id, int age, const char* name, int taskCount, const string* tasksArray)
+            : Employee(id, age, name) 
+        {
+            cout << "Programmer Argument constructor called" << endl;
+            
+            tasks.reserve(taskCount);
+            for (int i = 0; i < taskCount; ++i) 
+            {
+                tasks.push_back(tasksArray[i]); 
+            }
+        }
+    
+        // Move Constructor
+        Programmer(Programmer&& other) noexcept
+            : Employee(std::move(other)), tasks(std::move(other.tasks)) {
+                cout << "Programmer Move constructor called" << endl;
+            }
+    
+        // Move Assignment Operator
+        Programmer& operator=(Programmer&& other) noexcept 
+        {
+            if (this != &other) 
+            {
+                Employee::operator=(std::move(other));
+                tasks = std::move(other.tasks);
+            }
+            return *this;
+        }
+    
+        void swap(Programmer& other) 
+        {
+            Programmer temp(std::move(other)); 
+            other = std::move(*this);          
+            *this = std::move(temp);           
+        }
+    
+        
+        friend ostream& operator<<(ostream& out, const Programmer& programmer);
 };
 
-Programmer::Programmer(int v_id, int v_age, const char *v_name, string *v_tasks, int v_taskCount)
-    : Employee(v_id, v_age, v_name)
+ostream& operator<<(ostream& out, const Programmer& programmer) 
 {
-    taskCount = make_unique<int>(v_taskCount);
-    tasks = make_unique<string[]>(v_taskCount);
-    for (int i = 0; i < v_taskCount; i++)
+    out << static_cast<const Employee&>(programmer) << ", Tasks: ";
+    
+    if (programmer.tasks.empty())
     {
-        tasks[i] = v_tasks[i];
+        out << "No tasks available.";  
+    } 
+    else 
+    {
+        for (size_t i = 0; i < programmer.tasks.size(); ++i) 
+        {
+            out << programmer.tasks[i] << (i < programmer.tasks.size() - 1 ? ", " : "");
+        }
     }
+
+    return out;
 }
 
-Programmer::Programmer(Programmer &&other) noexcept
-    : Employee(move(other)), tasks(move(other.tasks)), taskCount(move(other.taskCount))
+int main() 
 {
-}
+    const string tasks1[] = {"Code", "Debug", "Test"};
+    Programmer p1(101, 23, "Athira", 3, tasks1);
 
-Programmer &Programmer::operator=(Programmer &&other) noexcept
-{
-    if (this != &other)
-    {
-        Employee::operator=(move(other));
-        tasks = move(other.tasks);
-        taskCount = move(other.taskCount);
-    }
-    return *this;
-}
+    const string tasks2[] = {"Design", "Develop", "Deploy"};
+    Programmer p2(102, 22, "Bhagya", 3, tasks2);
+    
+    const string tasks3[] = {"Research", "Implement", "Test"};
+    unique_ptr<Employee> empPtr = make_unique<Programmer>(103, 21, "Aysha", 3, tasks3);
 
-void Programmer::swp(Employee &other)
-{
-    if (Programmer *pOther = dynamic_cast<Programmer *>(&other))
+    cout << "\nBefore swapping:" << endl;
+    cout << p1 << endl; 
+    cout << p2 << endl; 
+
+    p1.swap(p2);
+
+    cout << "\nAfter swapping:" << endl;
+    cout << p1 << endl; 
+    cout << p2 << endl; 
+
+     cout << "Dynamic Programmer assigned to Employee pointer:" << endl;
+    Programmer* progPtr = dynamic_cast<Programmer*>(empPtr.get());
+    if (progPtr) 
     {
-        Programmer temp(move(*this));
-        *this = move(*pOther);
-        *pOther = move(temp);
-    }
+        cout << *progPtr << endl; 
+    } 
     else
     {
-        throw runtime_error("Incompatible types for swapping.");
+        cout << "Not a Programmer!" << endl;
     }
-}
-
-ostream &operator<<(ostream &out, const Programmer &programmer)
-{
-    out << static_cast<const Employee &>(programmer);
-    out << ", Task Count: " << *(programmer.taskCount) << ", Tasks: [";
-    for (int i = 0; i < *(programmer.taskCount); i++)
-    {
-        out << programmer.tasks[i];
-        if (i < *(programmer.taskCount) - 1)
-            out << ", ";
-    }
-    out << "]";
-    return out;
-}
-
-// Test the code
-int main()
-{
-    string tasks1[] = {"Code", "Debug", "Test"};
-    unique_ptr<Employee> p1 = make_unique<Programmer>(101, 22, "Athira", tasks1, 3);
-
-    string tasks2[] = {"Design", "Implement"};
-    unique_ptr<Employee> p2 = make_unique<Programmer>(102, 23, "Bhagya", tasks2, 2);
-
-    cout << "Before Swap:" << endl;
-    cout << *p1 << endl;
-    cout << *p2 << endl;
-
-    try
-    {
-        p1->swp(*p2);
-    }
-    catch (const runtime_error &e)
-    {
-        cerr << "Error: " << e.what() << endl;
-    }
-
-    cout << "\nAfter Swap:" << endl;
-    cout << *p1 << endl;
-    cout << *p2 << endl;
-
     return 0;
 }
