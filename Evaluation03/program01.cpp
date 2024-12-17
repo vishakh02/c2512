@@ -13,7 +13,7 @@ public:
     Employee(int empId, int empAge, const string& empName) 
         : id(empId), age(empAge), name(empName) {
             
-            cout << "Default Constructor" <<endl;
+            cout << "Argument Constructor" <<endl;
         }
 
     // Move Constructor
