@@ -1,206 +1,187 @@
 #include <iostream>
-#include <string>
 #include <cstring>
+#include <utility>
+#include <memory>  
+#include <vector>  
 
 using namespace std;
 
-class Employee
+// Employee class
+class Employee 
 {
-private:
-    int *id;
-    int *age;
-    char *name;
-
-public:
-    Employee(int id, int age, const char *name);
-    Employee(Employee &&other);
-    Employee &operator=(Employee &&other);
-    virtual ~Employee();
-    virtual void swp(Employee &other);
-    friend ostream &operator<<(ostream &out, const Employee &employee);
+    private:
+        unique_ptr<int> id;
+        unique_ptr<int> age;
+        unique_ptr<char[]> name;
+    
+    public:
+        // Constructor
+        Employee(int id, int age, const char* name) 
+        {
+            this->id = make_unique<int>(id);
+            this->age = make_unique<int>(age);
+            this->name = make_unique<char[]>(strlen(name) + 1);
+            strcpy(this->name.get(), name);
+        }
+    
+        // Default constructor
+        Employee() : id(nullptr), age(nullptr), name(nullptr) {}
+    
+        // Move Constructor
+        Employee(Employee&& other) noexcept
+            : id(std::move(other.id)), age(std::move(other.age)), name(std::move(other.name)) {}
+    
+        // Move Assignment Operator
+        Employee& operator=(Employee&& other) noexcept 
+        {
+            if (this != &other) 
+            {
+                id = std::move(other.id);
+                age = std::move(other.age);
+                name = std::move(other.name);
+            }
+            return *this;
+        }
+    
+        friend ostream& operator<<(ostream& out, const Employee& employee);
+ 
+        friend istream& operator>>(istream& input, Employee& employee);
+    
+        int getId() const { return *id; }
+        int getAge() const { return *age; }
+        const char* getName() const { return name.get(); }
 };
 
-Employee::Employee(int id, int age, const char *name)
+ostream& operator<<(ostream& out, const Employee& employee) 
 {
-    this->id = new int{id};
-    this->age = new int{age};
-    this->name = new char[strlen(name) + 1];
-    strcpy(this->name, name);
-}
-
-Employee::Employee(Employee &&other)
-{
-    this->id = other.id;
-    this->age = other.age;
-    this->name = other.name;
-    other.id = nullptr;
-    other.age = nullptr;
-    other.name = nullptr;
-}
-
-Employee &Employee::operator=(Employee &&other)
-{
-    if (this != &other)
-    {
-        delete this->id;
-        delete this->age;
-        delete[] this->name;
-        this->id = other.id;
-        this->age = other.age;
-        this->name = other.name;
-        other.id = nullptr;
-        other.age = nullptr;
-        other.name = nullptr;
-    }
-    return *this;
-}
-
-Employee::~Employee()
-{
-    delete this->id;
-    delete this->age;
-    delete[] this->name;
-}
-
-void Employee::swp(Employee &other)
-{
-    Employee temp(move(*this));
-    *this = move(other);
-    other = move(temp);
-}
-
-ostream &operator<<(ostream &out, const Employee &employee)
-{
-    out << "ID: " << *(employee.id) << ", Name: " << employee.name << ", Age: " << *(employee.age);
+    out << *employee.id << " " << *employee.age << " " << employee.name.get();
     return out;
+}
+
+istream& operator>>(istream& input, Employee& employee)
+{
+    int id, age;
+    string name;
+    cout << "Enter Employee ID: ";
+    input >> id;
+    cout << "Enter Employee Age: ";
+    input >> age;
+    cout << "Enter Employee Name: ";
+    input.ignore();  // To ignore the newline after age
+    getline(input, name);
+    
+    employee.id = make_unique<int>(id);
+    employee.age = make_unique<int>(age);
+    employee.name = make_unique<char[]>(name.length() + 1);
+    strcpy(employee.name.get(), name.c_str());
+    return input;
 }
 
 class Programmer : public Employee
 {
-private:
-    string *tasks;
-    int *taskCount;
-
-public:
-    Programmer(int v_id, int v_age, const char *v_name, string *v_tasks, int v_taskCount)
-        : Employee(v_id, v_age, v_name)
-    {
-        this->taskCount = new int{v_taskCount};
-        this->tasks = new string[v_taskCount];
-        for (int i = 0; i < v_taskCount; i++)
+    private:
+        vector<string> tasks; 
+    
+    public:
+        // Default constructor
+        Programmer() : Employee(), tasks() {}
+    
+        // Constructor
+        Programmer(int id, int age, const char* name, int taskCount, const string* tasksArray)
+            : Employee(id, age, name) 
         {
-            this->tasks[i] = v_tasks[i];
+            tasks.reserve(taskCount);
+            for (int i = 0; i < taskCount; ++i)
+            {
+                tasks.push_back(tasksArray[i]); 
+            }
         }
-    }
-
-    Programmer(Programmer &&other) : Employee(move(other))
-    {
-        this->taskCount = other.taskCount;
-        this->tasks = other.tasks;
-        other.taskCount = nullptr;
-        other.tasks = nullptr;
-    }
-
-    Programmer &operator=(Programmer &&other)
-    {
-        if (this != &other)
+    
+        // Move Constructor
+        Programmer(Programmer&& other) noexcept
+            : Employee(std::move(other)), tasks(std::move(other.tasks)) {}
+    
+        // Move Assignment Operator
+        Programmer& operator=(Programmer&& other) noexcept 
         {
-            Employee::operator=(move(other));
-            delete this->taskCount;
-            delete[] this->tasks;
-            this->taskCount = other.taskCount;
-            this->tasks = other.tasks;
-            other.taskCount = nullptr;
-            other.tasks = nullptr;
+            if (this != &other)
+            {
+                Employee::operator=(std::move(other));
+                tasks = std::move(other.tasks);
+            }
+            return *this;
         }
-        return *this;
-    }
-
-    ~Programmer()
-    {
-        delete taskCount;
-        delete[] tasks;
-    }
-
-    void swp(Employee &other) override
-    {
-        if (Programmer *pOther = dynamic_cast<Programmer *>(&other))
-        {
-            Programmer temp(move(*this));
-            *this = move(*pOther);
-            *pOther = move(temp);
-        }
-        else
-        {
-            throw runtime_error("Incompatible types for swapping.");
-        }
-    }
-
-    friend ostream &operator<<(ostream &out, const Programmer &programmer);
+    
+        // << operator to display Programmer details
+        friend ostream& operator<<(ostream& out, const Programmer& programmer);
+    
+        // >> operator to read Programmer details
+        friend istream& operator>>(istream& input, Programmer& programmer);
 };
 
-ostream &operator<<(ostream &out, const Programmer &programmer)
+ostream& operator<<(ostream& out, const Programmer& programmer) 
 {
-    out << static_cast<const Employee &>(programmer);
-    out << ", Task Count: " << *(programmer.taskCount) << ", Tasks: [";
-    for (int i = 0; i < *(programmer.taskCount); i++)
+    out << static_cast<const Employee&>(programmer) << "   Tasks: ";
+    
+    if (programmer.tasks.empty()) 
     {
-        out << programmer.tasks[i];
-        if (i < *(programmer.taskCount) - 1)
-            out << ", ";
+        out << "No tasks available.";  // Debugging: Add check for empty task vector
+    } 
+    else 
+    {
+        for (size_t i = 0; i < programmer.tasks.size(); ++i) 
+        {
+            out << programmer.tasks[i] << (i < programmer.tasks.size() - 1 ? ", " : "");
+        }
     }
-    out << "]";
+
     return out;
 }
 
-int main()
+istream& operator>>(istream& input, Programmer& programmer)
+{
+    Employee tempEmp;
+    input >> tempEmp;  // Read the base Employee data
+    
+    int taskCount;
+    cout << "Enter number of tasks: ";
+    input >> taskCount;
+
+    string* tasksArray = new string[taskCount];
+    cout << "Enter tasks:" << endl;
+    for (int i = 0; i < taskCount; ++i) 
+    {
+        input >> ws;  // to discard any leading whitespace (important for getline)
+        getline(input, tasksArray[i]);
+    }
+
+    programmer = Programmer(tempEmp.getId(), tempEmp.getAge(), tempEmp.getName(), taskCount, tasksArray);
+
+    delete[] tasksArray;  // Clean up the dynamically allocated array
+    return input;
+}
+
+int main() 
 {
     int N;
     cout << "Enter the number of programmers: ";
     cin >> N;
 
-    Programmer **programmers = new Programmer *[N];
+    vector<Programmer> programmers(N);
 
-    for (int i = 0; i < N; ++i)
+    // Read programmers from the user input
+    for (int i = 0; i < N; ++i) 
     {
-        int id, age, taskCount;
-        string name;
-
-        cout << "\nEnter details for Programmer " << (i + 1) << ":\n";
-        cout << "ID: ";
-        cin >> id;
-        cout << "Age: ";
-        cin >> age;
-        cout << "Name: ";
-        cin.ignore();
-        getline(cin, name);
-        cout << "Number of tasks: ";
-        cin >> taskCount;
-
-        string *tasks = new string[taskCount];
-        cout << "Enter the tasks:\n";
-        cin.ignore();
-        for (int j = 0; j < taskCount; ++j)
-        {
-            cout << "Task " << (j + 1) << ": ";
-            getline(cin, tasks[j]);
-        }
-
-        programmers[i] = new Programmer(id, age, name.c_str(), tasks, taskCount);
-        delete[] tasks;
+        cout << "Enter details for Programmer " << (i + 1) << endl;
+        cin >> programmers[i];  // Overloaded >> operator
     }
 
-    cout << "\nDetails of all programmers:\n";
-    for (int i = 0; i < N; ++i)
+    // Display all programmers
+    cout << "\nProgrammer details:" << endl;
+    for (int i = 0; i < N; ++i) 
     {
-        cout << *programmers[i] << endl;
+        cout << programmers[i] << endl;
     }
-
-    for (int i = 0; i < N; ++i)
-    {
-        delete programmers[i];
-    }
-    delete[] programmers;
 
     return 0;
 }
