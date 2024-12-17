@@ -1,74 +1,83 @@
 #include <iostream>
-#include <cstring>
-
+#include <string>
 using namespace std;
 
-class Employee{
-    private:
-     int* Id;
-     double* age;
-     char* name;
+class Employee {
+private:
+    int* id;        
+    int* age;       
+    string* name;   
 
-    public:
-     void swap(Employee& other);
-     Employee(int Id, double age, const char* name);
-     ~Employee();
-     
-     friend ostream& operator<<(ostream& output, const Employee& Employee);
+public:
+    
+    Employee(int empId, int empAge, const string& empName) {
+         cout << "Argument Constructor"<<endl;
+        id = new int(empId);             
+        age = new int(empAge);           
+        name = new string(empName);     
+    }
+
+    ~Employee() {
+        delete id;      
+        delete age;     
+        delete name;   
+    }
+
+    // Move Constructor
+    Employee(Employee&& other) noexcept
+        : id(other.id), age(other.age), name(other.name) {
+        cout << "\n"; cout << "Destructor called"<<endl;
+        other.id = nullptr;
+        other.age = nullptr;
+        other.name = nullptr;
+    }
+
+    Employee& operator=(Employee&& other) noexcept {
+        if (this != &other) {
+            delete id;     
+            delete age;    
+            delete name;   
+
+            id = other.id;
+            age = other.age;
+            name = other.name;
+
+            other.id = nullptr;
+            other.age = nullptr;
+            other.name = nullptr;
+        }
+        return *this;
+    }
+
+    friend ostream& operator<<(ostream& output, const Employee& emp) {
+        output << *(emp.id) << " " << *(emp.age) << " " << *(emp.name);
+        return output;
+    }
+
+    void swap(Employee& other) {
+        Employee temp = std::move(*this);  
+        *this = std::move(other);         
+        other = std::move(temp);          
+    }
 };
 
-ostream& operator<<(ostream& output, const Employee& employee){
-    output << *employee.Id << ", " << *employee.age << ", " << employee.name;
-    return output;
-}
+int main() {
 
-int main(){
-    Employee e1(101,22,"Athira");
-    Employee e2(102,23,"Bhagya");
+    Employee* e1 = new Employee(101, 22, "Athira");
+    Employee* e2 = new Employee(102, 23, "Bhagya");
 
-    cout << "\n"; cout << "Original values: "<< endl; cout << "\n";
-    cout << e1 << endl;
-    cout << e2 << endl;
+    cout << "\n" << "Before swapping:" << endl;
+    cout << *e1 << endl; // 101 22 Athira
+    cout << *e2 << endl; // 102 23 Bhagya
 
-    e1.swap(e2);
+    e1->swap(*e2);
 
-    cout << "\n"; cout << "Swapped values: "<< endl; cout << "\n";
-    cout << e1 << endl;
-    cout << e2 << endl;
-    cout << "\n";
+    cout << "\n" << "After swapping:" << endl;
+    cout << *e1 << endl; // 102 23 Bhagya
+    cout << *e2 << endl; // 101 22 Athira
+
+    delete e1;
+    delete e2;
 
     return 0;
 }
-
-void Employee::swap(Employee& other){
-    int temp = *this->Id;
-    *this->Id = *other.Id;
-    *other.Id = temp;
-
-    double temp2 = *this->age;
-    *this->age = *other.age;
-    *other.age = temp2;
-
-    char* temp3 = this->name;  
-    this->name = other.name;   
-    other.name = temp3;       
-}
-
-Employee::Employee(int Id, double age, const char* name){
-    cout << "Constructor Invoked" << endl;
-    
-    this->Id = new int(Id);
-    this->age = new double(age);
-    this->name = new char [strlen(name)+1];
-    strcpy(this->name, name);
-}
-
-Employee::~Employee() {
-    cout << "Destructor Invoked" << endl;
-    delete Id;
-    delete age;
-    delete[] name;
-}
-
-
-      
