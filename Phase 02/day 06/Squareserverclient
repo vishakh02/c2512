@@ -1,0 +1,156 @@
+SERVER.CPP
+#include <iostream>
+#include <unistd.h>
+#include <cstring>
+#include <cstdlib>
+#include <sys/socket.h>
+#include <netinet/in.h>
+
+#define BUFFER_SIZE 1024
+
+void serveClient(int client_socket_fd) {
+    char buffer[BUFFER_SIZE];
+
+    // Receive a number from the client
+    read(client_socket_fd, buffer, BUFFER_SIZE);
+    long number = atol(buffer);
+
+    // Calculate the square of the number
+    long square = number * number;
+    std::cout << "Calculated square of " << number << " = " << square << "\n";
+
+    // Send the result back to the client
+    std::string squareStr = std::to_string(square);
+    send(client_socket_fd, squareStr.c_str(), squareStr.size() + 1, 0);
+
+    // Close the client connection
+    close(client_socket_fd);
+}
+
+void startServer(int port) {
+    int server_socket_fd;
+
+    // Create a socket
+    if ((server_socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        perror("Socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    sockaddr_in address;
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(port);
+
+    // Bind the socket to the port
+    if (bind(server_socket_fd, (sockaddr*)&address, sizeof(address)) < 0) {
+        perror("Bind failed");
+        close(server_socket_fd);
+        exit(EXIT_FAILURE);
+    }
+
+    // Listen for client connections
+    if (listen(server_socket_fd, 5) < 0) {
+        perror("Listen failed");
+        close(server_socket_fd);
+        exit(EXIT_FAILURE);
+    }
+
+    std::cout << "Server is running on port " << port << "...\n";
+
+    while (true) {
+        // Accept a client connection
+        int client_socket_fd;
+        if ((client_socket_fd = accept(server_socket_fd, nullptr, nullptr)) < 0) {
+            perror("Accept failed");
+            continue;
+        }
+
+        // Handle the client request
+        serveClient(client_socket_fd);
+    }
+
+    // Close the server socket
+    close(server_socket_fd);
+}
+
+int main(int argc, char* argv[]) {
+    if (argc != 3 || strcmp(argv[1], "server") != 0) {
+        std::cerr << "Usage: ./server server <port>\n";
+        return EXIT_FAILURE;
+    }
+
+    int port = atoi(argv[2]);
+    startServer(port);
+
+    return EXIT_SUCCESS;
+}
+
+CLIENT.CPP
+#include <iostream>
+#include <unistd.h>
+#include <cstring>
+#include <cstdlib>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#define BUFFER_SIZE 1024
+
+void connectToServer(const std::string& server_ip, int port) {
+    int client_socket_fd;
+
+    // Create a socket
+    if ((client_socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        perror("Socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    sockaddr_in server_address;
+    server_address.sin_family = AF_INET;
+    server_address.sin_port = htons(port);
+
+    // Convert IP address to binary form
+    if (inet_pton(AF_INET, server_ip.c_str(), &server_address.sin_addr) <= 0) {
+        perror("Invalid address");
+        exit(EXIT_FAILURE);
+    }
+
+    // Connect to the server
+    if (connect(client_socket_fd, (sockaddr*)&server_address, sizeof(server_address)) < 0) {
+        perror("Connection failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // Get a number from the user
+    long number;
+    std::cout << "Enter a number to square: ";
+    std::cin >> number;
+
+    // Send the number to the server
+    std::string numberStr = std::to_string(number);
+    send(client_socket_fd, numberStr.c_str(), numberStr.size() + 1, 0);
+
+    // Receive the square from the server
+    char buffer[BUFFER_SIZE];
+    read(client_socket_fd, buffer, BUFFER_SIZE);
+
+    long square = atol(buffer);
+    std::cout << "The square of " << number << " is " << square << "\n";
+
+    // Close the connection
+    close(client_socket_fd);
+}
+
+int main(int argc, char* argv[]) {
+    if (argc != 4 || strcmp(argv[1], "client") != 0) {
+        std::cerr << "Usage: ./client client <server_ip> <port>\n";
+        return EXIT_FAILURE;
+    }
+
+    std::string server_ip = argv[2];
+    int port = atoi(argv[3]);
+
+    connectToServer(server_ip, port);
+
+    return EXIT_SUCCESS;
+}
