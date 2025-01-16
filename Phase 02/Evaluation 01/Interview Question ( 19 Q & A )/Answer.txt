@@ -1,0 +1,365 @@
+//(40 - 57)
+
+
+
+40. Access Specifiers in C++
+
+Access specifiers define the scope and accessibility of members (variables or methods) within a class.
+
+1. Private:
+
+Only accessible inside the same class.
+
+Used to encapsulate data that shouldn't be accessed directly.
+
+
+
+2. Protected:
+
+Accessible inside the same class and by derived (child) classes.
+
+Useful for inheritance.
+
+
+
+3. Public:
+
+Accessible from anywhere.
+
+
+
+
+Code Example:
+
+#include <iostream>
+using namespace std;
+
+class Base {
+private:
+    int privateVar = 10; // Accessible only within Base
+protected:
+    int protectedVar = 20; // Accessible in Base and derived classes
+public:
+    int publicVar = 30; // Accessible anywhere
+    int getPrivateVar() { return privateVar; } // Getter for privateVar
+};
+
+class Derived : public Base {
+public:
+    void display() {
+        // cout << privateVar; // Error: Not accessible
+        cout << "ProtectedVar: " << protectedVar << endl;
+        cout << "PublicVar: " << publicVar << endl;
+    }
+};
+
+int main() {
+    Derived obj;
+    obj.display();
+    cout << "PublicVar directly: " << obj.publicVar << endl;
+    // cout << obj.protectedVar; // Error: Not accessible
+    return 0;
+}
+
+
+---
+
+43. Program on Inheritance
+
+Inheritance is a feature of OOP that allows one class (child) to acquire the properties and methods of another class (parent).
+
+Types of Inheritance:
+
+1. Single: One child inherits from one parent.
+
+
+2. Multilevel: A child inherits from a parent, and another class inherits from the child.
+
+
+3. Hierarchical: Multiple children inherit from one parent.
+
+
+
+Code Example:
+
+#include <iostream>
+using namespace std;
+
+class Parent {
+public:
+    void displayParent() { cout << "This is the Parent class." << endl; }
+};
+
+class Child : public Parent {
+public:
+    void displayChild() { cout << "This is the Child class." << endl; }
+};
+
+int main() {
+    Child obj;
+    obj.displayParent(); // Access parent class method
+    obj.displayChild();  // Access child class method
+    return 0;
+}
+
+
+---
+
+44. Default and Parameterized Constructors
+
+Constructors are special methods called automatically when an object is created.
+
+1. Default Constructor: Takes no arguments and initializes members to default values.
+
+
+2. Parameterized Constructor: Takes arguments and initializes members with specific values.
+
+
+
+Code Example:
+
+#include <iostream>
+using namespace std;
+
+class Example {
+public:
+    Example() { // Default Constructor
+        cout << "Default Constructor called!" << endl;
+    }
+
+    Example(int x) { // Parameterized Constructor
+        cout << "Parameterized Constructor called with value: " << x << endl;
+    }
+};
+
+int main() {
+    Example obj1;     // Default constructor is called
+    Example obj2(42); // Parameterized constructor is called
+    return 0;
+}
+
+
+---
+
+45. Passing Integer Variable from Parent to Child Using Constructor
+
+To pass values from a parent class to a child class, use an initializer list in the child constructor.
+
+Code Example:
+
+#include <iostream>
+using namespace std;
+
+class Parent {
+protected:
+    int value;
+public:
+    Parent(int val) : value(val) { // Parent Constructor
+        cout << "Parent Constructor called!" << endl;
+    }
+};
+
+class Child : public Parent {
+public:
+    Child(int val) : Parent(val) { // Pass value to Parent Constructor
+        cout << "Child Constructor called with value: " << value << endl;
+    }
+};
+
+int main() {
+    Child obj(100); // Pass 100 to the Parent class through Child
+    return 0;
+}
+
+
+---
+
+46. OOP Concepts with Examples
+
+1. Encapsulation:
+
+Hides internal details of a class and provides access via methods.
+Example:
+
+class Encapsulation {
+private:
+    int privateVar;
+public:
+    void setVar(int val) { privateVar = val; } // Setter
+    int getVar() { return privateVar; }       // Getter
+};
+
+2. Inheritance:
+
+Allows a child class to reuse the properties of a parent class.
+Example:
+
+class Parent {
+public:
+    void show() { cout << "Parent class" << endl; }
+};
+
+class Child : public Parent {};
+
+3. Polymorphism:
+
+Allows the same method to behave differently depending on the object.
+Example:
+
+class Base {
+public:
+    virtual void show() { cout << "Base class" << endl; }
+};
+
+class Derived : public Base {
+public:
+    void show() override { cout << "Derived class" << endl; }
+};
+
+4. Abstraction:
+
+Hides unnecessary details and shows only the relevant features.
+Example:
+
+class Abstract {
+public:
+    virtual void display() = 0; // Pure virtual function
+};
+
+
+---
+
+47. Polymorphism Using Pointer
+
+Polymorphism is achieved via virtual functions and pointers to base classes.
+
+Code Example:
+
+#include <iostream>
+using namespace std;
+
+class Base {
+public:
+    virtual void display() { cout << "Base class" << endl; }
+};
+
+class Derived : public Base {
+public:
+    void display() override { cout << "Derived class" << endl; }
+};
+
+int main() {
+    Base *basePtr;
+    Derived derivedObj;
+    basePtr = &derivedObj;
+    basePtr->display(); // Calls Derived's display() method
+    return 0;
+}
+
+
+---
+
+53. Run-Time Polymorphism Example
+
+Run-time polymorphism uses virtual functions and occurs during program execution.
+
+Code Example:
+
+#include <iostream>
+using namespace std;
+
+class Shape {
+public:
+    virtual void draw() { cout << "Drawing a shape" << endl; }
+};
+
+class Circle : public Shape {
+public:
+    void draw() override { cout << "Drawing a circle" << endl; }
+};
+
+int main() {
+    Shape *shapePtr;
+    Circle circleObj;
+    shapePtr = &circleObj;
+    shapePtr->draw(); // Calls Circle's draw() due to polymorphism
+    return 0;
+}
+
+
+---
+
+54. Accessing Private Data Members in Subclass
+
+Private members can be accessed using public or protected getter methods in the base class.
+
+Code Example:
+
+#include <iostream>
+using namespace std;
+
+class Parent {
+private:
+    int privateData = 42;
+protected:
+    int getPrivateData() { return privateData; } // Getter for private data
+};
+
+class Child : public Parent {
+public:
+    void display() { cout << "Private Data: " << getPrivateData() << endl; }
+};
+
+int main() {
+    Child obj;
+    obj.display(); // Access private data via protected getter
+    return 0;
+}
+
+
+---
+
+56. OOP Design for Image Conversion
+
+Scenario: Convert image formats (e.g., JPG to PNG).
+
+1. Use a base class (Image) with a virtual function for conversion.
+
+
+2. Derive specific classes (JPG, PNG) to implement format-specific conversions.
+
+
+
+Code Example:
+
+#include <iostream>
+using namespace std;
+
+class Image {
+public:
+    virtual void convert() = 0; // Abstract function
+};
+
+class JPG : public Image {
+public:
+    void convert() override { cout << "Converting JPG to PNG" << endl; }
+};
+
+class PNG : public Image {
+public:
+    void convert() override { cout << "Converting PNG to JPG" << endl; }
+};
+
+int main() {
+    Image *img;
+    JPG jpgObj;
+    PNG pngObj;
+
+    img = &jpgObj;
+    img->convert();
+
+    img = &pngObj;
+    img->convert();
+
+    return 0;
+}
