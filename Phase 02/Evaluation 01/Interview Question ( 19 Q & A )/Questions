@@ -1,0 +1,20 @@
+x 39. There is a base class Shape and derived classes Rectangle, triangle, square using inheritance and pure virtual function.
+   How to draw the shapes in MFC using this code 
+40. What are the access specifiers and explain with the help of a code 
+41. Asked about 1&2nd phase training
+42. What all topics covered on 1st phase
+43. To write a program on inheritance 
+44. Write default and parameterised constructors
+45. Give an integer variable in parent and pass it to child using constructor
+46. Oops concept 
+47. Write a program on polymorphism using pointer
+48. Debugging and asked to show how to do debugging 
+49. Pointers: character pointer, integer pointer, adding characters into an array without using for loop
+50. Use strcpy 
+51. Oops explain each concept using sample code 
+52. Access specifiers explanation with code 
+53. Run time polymorphism sample example 
+54. How to get the value of a private data member in the inherited subclass.
+55. Oops - polymorphism- write a code to show polymorphism using base class pointer?
+56. Consider a scenario where you are asked to convert image format of different pictures [eg. jpg to png]. How you can design that using oops concept?
+57. Asked to open a recent project and do debugging?
