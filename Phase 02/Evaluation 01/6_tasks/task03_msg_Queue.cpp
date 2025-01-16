@@ -109,7 +109,6 @@ int main() {
     }
 
     wait(nullptr);
-    wait(nullptr);
 
     // Remove the message queue
     msgctl(msgid, IPC_RMID, nullptr);
