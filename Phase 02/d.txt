@@ -1,0 +1,60 @@
+            ::Product Management:: 
+                -Nav Pages: 
+                    [1] Create [2] Edit [3] Delete [4] Search
+                    [5] Change Password
+                    [99] Exit 
+                ::Product Management > Create:: 
+                    - page title
+                        - form :  name, description, category, quantity, supplier, cost, mrp, price, expiry
+                            - fields: (caption, error message(s))
+                                name {required, isExist}
+                                description {required, isExist}
+                                category {required}
+                                quantity {required, minimum=0}
+                                supplier {<search supplier>}
+                                    !After Search, Display as "Sooraj, Ph:1112223333, sooraj@gmail.com, addr:kazhakootam side gate techno park"
+                                cost {required, minimum=0}
+                                mrp {required, minimum=0}
+                                price {required, minimum=0, price <= mrp}
+                                expiry {required, isDate, expiry >= sysdate}
+                        - on form submit: 
+                            - allow to edit field / group of fields !XXX
+                            - OR Confirm  
+                            - OR Exit  
+                        - after form submit:
+                            - successful message 
+                                - code is generated 
+                ::Product Management > Edit::
+                    - page title 
+                        - starts with Search: 
+                        - display the fields of an product
+                        - edit field / group of fields !XXX
+                        - on form submit: 
+                            - OR Confirm  
+                            - OR Exit  
+                        - after form submit:
+                            - successful message 
+                ::Product Management > Delete::
+                    - page title 
+                    - starts with Search: 
+                    - display the fields of an user                    -
+                    - on form submit: 
+                        - OR Confirm  
+                        - OR Exit  
+                    - after form submit:
+                        - successful message 
+                ::Product Management > Search::
+                    - page title 
+                    - starts with Search: 
+                    - display the product in tabular format 
+                    - pagination if more than one page, here page = 20 business objects  
+                ::Product Management > Change Password::
+                    - page title 
+                    - starts with Search: 
+                    - display the fields of the products
+                    - new_password field {required}
+                    - on form submit: 
+                        - OR Confirm  
+                        - OR Exit  
+                    - after form submit:
+                        - successful message 
