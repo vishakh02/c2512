@@ -1,0 +1,34 @@
+3. RAG & Ollama System (Inside Docker Container)
+    => PURPOSE : Handles text storage, vector embedding, and response generation.
+ 
+    => FEATURES :
+        - Stores user-entered text as vectors for retrieval.
+ 
+        - Processes queries using embedded data and LLM model.
+ 
+        - Returns generated responses based on stored data.
+ 
+    => DEPENDENCIES :
+        - Embedding(all_MiniLM_L6_V2) : enables efficient search in vector db.
+ 
+        - FAISS / ChromaDB : It will Converts text into vector embeddings and stores them.
+ 
+        - LangChain : It will Manages interaction between RAG and Ollama.
+ 
+        - Ollama LLM : It will It will Generates responses based on vectorized data.
+ 
+        - NumPy / SciPy : It will Handles mathematical computations in vector search.
+ 
+    => DATA-FLOW :
+        1. Receives user-entered text from FastAPI and embeds it into vectors.
+            - Waits for embedding confirmation before notifying FastAPI.
+ 
+        2. Receives query from FastAPI, searches stored vectors, and passes relevant data to Ollama.
+             - Waits for generated response before sending it back to FastAPI.
+ 
+    => WAITING-REQUIREMENTS :
+        - Waits for vector embedding process to complete before confirming storage.
+ 
+        - Waits for Ollama to generate a response before sending it to FastAPI.
+ 
+------
