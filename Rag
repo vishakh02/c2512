@@ -1,34 +1,60 @@
-3. RAG & Ollama System (Inside Docker Container)
-    => PURPOSE : Handles text storage, vector embedding, and response generation.
- 
-    => FEATURES :
-        - Stores user-entered text as vectors for retrieval.
- 
-        - Processes queries using embedded data and LLM model.
- 
-        - Returns generated responses based on stored data.
- 
-    => DEPENDENCIES :
-        - Embedding(all_MiniLM_L6_V2) : enables efficient search in vector db.
- 
-        - FAISS / ChromaDB : It will Converts text into vector embeddings and stores them.
- 
-        - LangChain : It will Manages interaction between RAG and Ollama.
- 
-        - Ollama LLM : It will It will Generates responses based on vectorized data.
- 
-        - NumPy / SciPy : It will Handles mathematical computations in vector search.
- 
-    => DATA-FLOW :
-        1. Receives user-entered text from FastAPI and embeds it into vectors.
-            - Waits for embedding confirmation before notifying FastAPI.
- 
-        2. Receives query from FastAPI, searches stored vectors, and passes relevant data to Ollama.
-             - Waits for generated response before sending it back to FastAPI.
- 
-    => WAITING-REQUIREMENTS :
-        - Waits for vector embedding process to complete before confirming storage.
- 
-        - Waits for Ollama to generate a response before sending it to FastAPI.
- 
-------
+PURPOSE
+
+Handles text storage, vector embedding, retrieval, and response generation for an efficient RAG pipeline.
+
+FEATURES
+
+Stores user-entered text as vector embeddings for retrieval.
+
+Processes queries using vector search and a large language model (LLM).
+
+Generates responses by retrieving relevant stored data and passing it to Ollama.
+
+
+DEPENDENCIES
+
+Embedding Model (all-MiniLM-L6-V2) → Converts text into vector embeddings for efficient search.
+
+FAISS / ChromaDB → Stores vector embeddings and performs similarity-based retrieval.
+
+LangChain → Manages interaction between RAG components (vector DB, embedding model, LLM).
+
+Ollama LLM → Generates responses based on retrieved vectorized data.
+
+NumPy / SciPy → Supports mathematical operations for vector search and retrieval.
+
+
+DATA FLOW
+
+1. Text Ingestion & Storage
+
+Receives user-entered text from FastAPI.
+
+Embeds text into vectors using all-MiniLM-L6-V2.
+
+Stores the vectors in FAISS/ChromaDB.
+
+Confirms storage to FastAPI once embedding & storage are complete.
+
+
+
+2. Query Processing & Response Generation
+
+Receives query from FastAPI.
+
+Converts query into a vector using the same embedding model.
+
+Retrieves similar stored vectors from FAISS/ChromaDB.
+
+Passes retrieved data to Ollama for response generation.
+
+Sends generated response back to FastAPI.
+
+
+
+
+WAITING REQUIREMENTS
+
+Waits for vector embedding process to complete before confirming storage.
+
+Waits for Ollama to generate a response before sending it to FastAPI.
