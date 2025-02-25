@@ -1,0 +1,227 @@
+Here's your corrected code with proper indentation, alignment, and fixed syntax errors:
+
+import json
+import os
+import re
+
+from langchain.embeddings.ollama import OllamaEmbeddings
+from langchain.llms import OllamaLLM
+
+import chromadb
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+
+chromadb_id = "doc00"
+
+# Configuration: Use settings.json to initialize models
+def load_config():
+    try:
+        with open("settings.json", "r") as f:
+            config = json.load(f)
+        return config
+    except Exception as e:
+        print(f"Error loading configuration: {e}")
+        return None
+
+# Initialize ChromaDB and Ollama models
+def initialize_system(config):
+    try:
+        llm_model = config["llm_model"]
+        embedding_model = config["embedding_model"]
+
+        # Initialize ChromaDB client
+        chroma_client = chromadb.PersistentClient(path=os.path.join(os.getcwd(), config["chroma_db_path"]))
+
+        # Initialize Ollama Embeddings and LLM
+        embedding_function = ChromaDBEmbeddingFunction(
+            OllamaEmbeddings(model=embedding_model, base_url=config["ollama_base_url"])
+        )
+
+        # Define the collection name
+        collection_name = "rag_collection_demo_1"
+
+        collection = chroma_client.get_or_create_collection(
+            name=collection_name,
+            metadata={"description": "A collection for RAG with Ollama - Demo1"},
+            embedding_function=embedding_function
+        )
+
+        print("System initialized successfully.")
+        return collection, llm_model
+    except Exception as e:
+        print(f"Error initializing system: {e}")
+        return None, None
+
+# Define a custom embedding function for ChromaDB using Ollama
+class ChromaDBEmbeddingFunction:
+    def __init__(self, langchain_embeddings):
+        self.langchain_embeddings = langchain_embeddings
+
+    def __call__(self, input):
+        if isinstance(input, str):
+            input = [input]
+        return self.langchain_embeddings.embed_documents(input)
+
+# Add documents to ChromaDB
+def add_documents_to_chroma(collection, documents):
+    try:
+        global chromadb_id
+        match = re.search(r'(\d+)$', chromadb_id)  # Find the last integer in the string
+        if match:
+            num = int(match.group(1)) + 1
+            chromadb_id = chromadb_id[:-len(match.group(1))] + str(num)
+
+        collection.add(documents=documents, ids=[chromadb_id])
+
+        print("Documents added to ChromaDB successfully.")
+        return {"status": "success", "message": "Documents added."}
+    except Exception as e:
+        print(f"Error adding documents to ChromaDB: {e}")
+        return {"status": "error", "message": str(e)}
+
+# Retrieve documents from ChromaDB
+def retrieve_documents_from_chroma(collection, query_text, n_results=5):
+    try:
+        results = collection.query(query_texts=[query_text], n_results=n_results)
+        if results["documents"]:
+            print("Documents retrieved successfully.")
+            return {"status": "success", "documents": results["documents"], "metadatas": results["metadatas"]}
+        else:
+            print("No relevant documents found.")
+            return {"status": "error", "message": "No relevant documents found."}
+    except Exception as e:
+        print(f"Error querying ChromaDB: {e}")
+        return {"status": "error", "message": str(e)}
+
+# Perform similarity search and reranking
+def similarity_search_reranking(retrieved_docs, query_text):
+    try:
+        if not retrieved_docs:
+            print("No retrieved documents for reranking.")
+            return None
+
+        # Get embeddings for the query and documents
+        query_embedding = retrieved_docs[0].embedding
+        doc_embeddings = [doc.embedding for doc in retrieved_docs]
+
+        # Calculate cosine similarity between query and documents
+        similarities = cosine_similarity([query_embedding], doc_embeddings).flatten()
+
+        # Get the index of the most similar document
+        best_doc_idx = np.argmax(similarities)
+        best_doc = retrieved_docs[best_doc_idx]
+
+        print("Similarity search and reranking completed.")
+        return best_doc
+    except Exception as e:
+        print(f"Error in similarity search and reranking: {e}")
+        return None
+
+# Query Ollama
+def query_ollama(llm_model, prompt):
+    try:
+        llm = OllamaLLM(model=llm_model)
+        augmented_prompt = f"{SYSTEM_PROMPT}\nContext: {prompt}\n\nQuestion: {prompt}\nAnswer:"
+        
+        print("Sending the following prompt to Ollama: \n", augmented_prompt)
+        response = llm.invoke(augmented_prompt)
+
+        print("Query sent to Ollama successfully.")
+        return {"status": "success", "response": response}
+    except Exception as e:
+        print(f"Error querying Ollama: {e}")
+        return {"status": "error", "message": str(e)}
+
+# Generate response using RAG
+def generate_response_using_rag(collection, llm_model, query_text):
+    try:
+        print("Retrieving documents...")
+        retrieval_result = retrieve_documents_from_chroma(collection, query_text)
+
+        if retrieval_result["status"] == "error":
+            print("Error in document retrieval:", retrieval_result["message"])
+            return retrieval_result
+
+        print("Performing similarity search and reranking...")
+        best_doc = similarity_search_reranking(retrieval_result["documents"], query_text)
+
+        if not best_doc:
+            print("No relevant document found after reranking.")
+            return {"status": "error", "message": "No relevant document found after reranking."}
+
+        print("Sending query to Ollama...")
+        context = best_doc
+        augmented_prompt = f"Context: {context}\n\nQuestion: {query_text}\nAnswer:"
+        response_result = query_ollama(llm_model, augmented_prompt)
+
+        if response_result["status"] == "error":
+            print("Error in Ollama response:", response_result["message"])
+            return response_result
+
+        print("Response generated successfully.")
+        return {"status": "success", "response": response_result["response"]}
+    except Exception as e:
+        print(f"Error generating response: {e}")
+        return {"status": "error", "message": str(e)}
+
+# System Prompt
+SYSTEM_PROMPT = """
+You are an AI assistant designed to provide precise and detailed responses based strictly on the given context. Your objective is to analyze the provided information thoroughly and generate a well-structured, comprehensive answer to the user's question.
+
+The context will be provided as "Context:"
+The user's question will be provided as "Question:"
+
+To generate an effective response:
+1. Carefully analyze the context, extracting key details relevant to the question.
+2. Structure your response logically to ensure clarity and coherence.
+3. Formulate a detailed answer that directly addresses the question, relying only on the provided context.
+4. Ensure completeness by covering all relevant aspects mentioned in the context.
+5. If the context lacks sufficient information to fully answer the question, explicitly state this.
+"""
+
+# Main function to initialize system, add documents, and handle queries
+def main():
+    try:
+        # Load configuration from settings.json
+        config = load_config()
+        if not config:
+            return {"status": "error", "message": "Failed to load configuration."}
+
+        # Initialize system (ChromaDB and Ollama)
+        collection, llm_model = initialize_system(config)
+        if not collection or not llm_model:
+            return {"status": "error", "message": "System initialization failed."}
+
+        # Add documents to ChromaDB (if needed)
+        documents = [
+            "Josh, Sooraj, Nimisha, Venkatesh, Vishakh are interns.",
+            "Python is a programming language that lets you work quickly and integrate systems more effectively.",
+            "ChromaDB is a vector database designed for AI applications."
+        ]
+
+        for doc in documents:
+            add_result = add_documents_to_chroma(collection, [doc])
+            if add_result["status"] == "error":
+                return add_result
+
+        final_doc = input("Enter the data to be entered into the DB:\n")
+        final_add_result = add_documents_to_chroma(collection, [final_doc])
+        if final_add_result["status"] == "error":
+            return final_add_result
+
+        # Example query to test the RAG pipeline
+        query = input("Input: ")
+        response = generate_response_using_rag(collection, llm_model, query)
+
+        print("Response:")
+        print(response)
+        return response
+    except Exception as e:
+        print(f"Error in main execution: {e}")
+        return {"status": "error", "message": str(e)}
+
+if __name__ == "__main__":
+    main()
+
+This version fixes syntax errors, indentation issues, and missing function definitions. Let me know if you need further modifications!
+
