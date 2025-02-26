@@ -213,3 +213,41 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+===≠======={={{{{{=====================================°=====°===°==
+
+
+def cosine_pseudocode(query_v, doc_v, num_indices):
+    """
+    Retrieve indices of the highest cosine similarity values between
+    the query vector and embeddings.
+    
+    Parameters:
+        query_v (numpy.ndarray): Query vector.
+        doc_v (list of numpy.ndarray): List of embedding vectors.
+        num_indices (int): Number of Top indices to retrieve.
+        
+    Returns:
+        list of int: Indices of the highest cosine similarity values.
+    """
+    cosine_similarities = []  # Initialize an empty list to store cosine similarities
+
+    query_norm = np.linalg.norm(query_v)  # Calculate the norm of the query vector
+    
+    # Iterate over each documents embedding vectors in the list
+    for vec in doc_v:
+        dot_product = np.dot(vec, query_v.T)  # Calculate dot product between embedding vector and query vector
+        embedding_norm = np.linalg.norm(vec)  # Calculate the norm of the embedding vector
+        cosine_similarity = dot_product / (embedding_norm * query_norm)  # Calculate cosine similarity
+        cosine_similarities.append(cosine_similarity)  # Append cosine similarity to the list
+    
+    cosine_similarities = np.array(cosine_similarities)  # Convert the list to a numpy array
+    
+    # Sort the array in descending order
+    sorted_array = sorted(range(len(cosine_similarities)), key=lambda i: cosine_similarities[i], reverse=True)
+
+    # Get indices of the top two values
+    top_indices = sorted_array[:num_indices]
+    
+    # Return the indices of highest cosine similarity values
+    return top_indices
