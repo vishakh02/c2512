@@ -1,0 +1,187 @@
+#chromadb_handler.py
+
+import os
+import chromadb
+import re
+from embedding_function import ChromaDBEmbeddingFunction
+from langchain_ollama import OllamaEmbeddings
+
+chromadb_id = "doc00"
+
+class ChromaDBHandler:
+    def __init__(self, config):
+        self.config = config
+        self.client = chromadb.PersistentClient(path=os.path.join(os.getcwd(), "chroma_db"))
+        self.embedding_function = ChromaDBEmbeddingFunction(
+            OllamaEmbeddings(model=config["embedding_model"],
+                             base_url=config["ollama_base_url"])
+        )
+        self.collection_name = "rag_collection_demo_1"
+        self.collection = self.client.get_or_create_collection(
+            name=self.collection_name,
+            metadata={"description": "A collection for RAG with Ollama Demo1"},
+            embedding_function=self.embedding_function
+        )
+
+    def add_documents(self, documents):
+        try:
+            global chromadb_id
+            # Find the last integer in the string
+            match = re.search(r'(\d+)$', chromadb_id)
+            if match:
+                # Increment the integer part
+                num = int(match.group(1)) + 1
+                # Update chromadb_id by replacing the old number with the incremented one
+                chromadb_id = chromadb_id[:-len(match.group(1))] + str(num)
+
+            self.collection.add(documents=documents, ids=[chromadb_id])
+            print("Documents added to ChromaDB successfully.")
+            return {"status": "success", "message": "Documents added."}
+        except Exception as e:
+            print(f"Error adding documents to ChromaDB: {e}")
+            return {"status": "error", "message": str(e)}
+
+    def retrieve_documents(self, query_text, n_results=5):
+        try:
+            results = self.collection.query(query_texts=[query_text], n_results=n_results)
+            if results["documents"]:
+                print("Documents retrieved successfully.")
+                return {"status": "success", "documents": results["documents"], "metadatas": results["metadatas"]}
+            else:
+                print("No relevant documents found.")
+                return {"status": "error", "message": "No relevant documents found."}
+        except Exception as e:
+            print(f"Error querying ChromaDB: {e}")
+            return {"status": "error", "message": str(e)}
+
+==================================================================================================================================
+
+# config_loader.py
+import json
+
+def load_config():
+    try:
+        with open("settings.json", "r") as f:
+            config = json.load(f)
+        return config
+    except Exception as e:
+        print(f"Error loading configuration: {e}")
+        return None
+
+==================================================================================================================================
+
+# embedding_function.py
+
+from langchain_ollama import OllamaEmbeddings
+
+class ChromaDBEmbeddingFunction:
+    def __init__(self, langchain_embeddings):
+        self.langchain_embeddings = langchain_embeddings
+
+    def __call__(self, input):
+        if isinstance(input, str):
+            input =[input]
+        return self.langchain_embeddings.embed_documents (input)
+
+==================================================================================================================================
+#main.py
+
+# Import the function directly, not a class
+from config_loader import load_config
+from rag_pipeline import RAGPipeline
+
+def main():
+    try:
+        # Load configuration from settings.json
+        config = load_config()
+        if not config:
+            return {"status": "error", "message": "Failed to load configuration."}
+
+        # Initialize RAG pipeline
+        rag_pipeline = RAGPipeline(config)
+
+        # Add documents to ChromaDB (if needed)
+        documents = [
+            "josh, sooraj, nimisha, venkatesh, vishakh are interns",
+            "Python is a programming language that lets you work quickly and integrate systems more effectively"
+            "ChromaDB is a vector database designed for AI applications."
+        ]
+        rag_pipeline.chroma_handler.add_documents(documents)
+
+        # Query loop
+        while True:
+            query = input("Enter your query: ")
+            if query.lower() == "exit":
+                break
+            response = rag_pipeline.generate_response(query)
+            print("Response: ")
+            print(response)
+
+    except Exception as e:
+        print(f"Error in main execution: {e}")
+        return {"status": "error", "message": str(e)}
+
+if __name__ == "__main__":
+    main()
+
+==================================================================================================================================
+# ollama_handler.py
+from langchain_ollama import OllamaLLM
+
+class OllamaHandler:
+    def __init__(self, model):
+        self.llm_model = model
+        self.llm = ollamaLLM(model=self.llm_model)
+
+    def query_ollama(self, prompt):
+        try:
+            response = self.llm.invoke(prompt)
+            print("Query sent to Ollama successfully.")
+            return {"status": "success", "response": response}
+        except Exception as e:
+            print(f"Error querying Ollama: {e}")
+            return {"status": "error", "message": str(e)}
+==================================================================================================================================
+
+# rag_pipeline.py
+
+from ollama_handler import OllamaHandler
+from chromadb_handler import ChromaDBHandler
+
+class RAGPipeline:
+    def __init__(self, config):
+        self.config = config
+        self.chroma_handler = ChromaDBHandler(config)
+        self.ollama_handler = OllamaHandler(config["llm_model"])
+
+    def similarity_search_reranking(self, retrieved_docs, query_text):
+        try:
+            # Placeholder for actual reranking logic (e.g., using cosine similarity)
+            best_doc = retrieved_docs[0] if retrieved_docs else None
+            print("Similarity search and reranking completed.")
+            return best_doc
+        except Exception as e:
+            print(f"Error in similarity search and reranking: {e}")
+            return None
+
+    def generate_response(self, query_text):
+        try:
+            # Step 1: Retrieve documents from ChromaDB
+            retrieval_result = self.chroma_handler.retrieve_documents(query_text)           
+            if retrieval_result["status"] == "error":
+                return retrieval_result
+
+            # Step 2: Perform similarity search and reranking
+            best_doc = self.similarity_search_reranking(retrieval_result["documents"], query_text)
+            if not best_doc:
+                return {"status": "error", "message": "No relevant document found after reranking."}
+
+            # Step 3: Send query and best document to Ollama
+            context = best_doc
+            augmented_prompt = f"Context: {context}\n\nQuestion: {query_text}\nAnswer:"
+            response_result = self.ollama_handler.query_ollama(augmented_prompt)
+            return response_result
+        except Exception as e:
+            print(f"Error generating response: {e}")
+            return {"status": "error", "message": str(e)}
+
